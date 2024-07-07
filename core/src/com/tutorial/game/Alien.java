@@ -14,11 +14,11 @@ public class Alien {
     public Vector2 position;
     public Sprite sprite;
 
-    public Alien(Texture img,Color color, float startx, float starty) {
+    public Alien(Texture img,Color color, float startX, float startY) {
         sprite = new Sprite(img);
         sprite.setColor(color);
         sprite.setScale(4);
-        position = new Vector2(startx, starty);
+        position = new Vector2(startX, startY);
 
         // create multiple
     }
