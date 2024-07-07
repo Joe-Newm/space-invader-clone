@@ -25,6 +25,8 @@ public class Player {
         position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2);
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
+
+
     }
     public void update(float deltaTime) {
         if(Gdx.input.isKeyPressed(Keys.LEFT)){
