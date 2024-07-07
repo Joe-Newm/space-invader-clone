@@ -14,11 +14,13 @@ public class Alien {
     public Vector2 position;
     public Sprite sprite;
 
-    public Alien(Texture img,Color color ) {
+    public Alien(Texture img,Color color, float startx, float starty) {
         sprite = new Sprite(img);
         sprite.setColor(color);
         sprite.setScale(4);
-        position = new Vector2((float) Gdx.graphics.getWidth() /2, (float) Gdx.graphics.getHeight() /2);
+        position = new Vector2(startx, starty);
+
+        // create multiple
     }
     public void draw(SpriteBatch batch){
         sprite.setPosition(position.x, position.y);
