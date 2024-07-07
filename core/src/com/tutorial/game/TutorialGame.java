@@ -85,9 +85,9 @@ public class TutorialGame extends ApplicationAdapter {
 		boolean hitEdge = false;
 		for(Alien alien : aliens) {
 			if (movingRight) {
-				alien.position.x += 1;
+				alien.position.x += 0.5;
 			} else {
-				alien.position.x -= 1;
+				alien.position.x -= 0.5;
 			}
 			// check for hitEdge
 			if (alien.position.x >= Gdx.graphics.getWidth() - alien.sprite.getWidth() || alien.position.x <= 0){
