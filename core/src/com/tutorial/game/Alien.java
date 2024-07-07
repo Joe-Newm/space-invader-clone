@@ -13,18 +13,27 @@ import java.util.Iterator;
 public class Alien {
     public Vector2 position;
     public Sprite sprite;
+    public ArrayList<Bullet> bullets;
+    public Texture bulletTexture;
 
-    public Alien(Texture img,Color color, float startX, float startY) {
+    public Alien(Texture img,Texture img_bullet, ArrayList<Bullet> bullets, Color color, float startX, float startY) {
         sprite = new Sprite(img);
         sprite.setColor(color);
         sprite.setScale(4);
         position = new Vector2(startX, startY);
+        bulletTexture = img_bullet;
+        this.bullets = bullets;
 
         // create multiple
+    }
+    public void shoot() {
+        bullets.add(new Bullet(bulletTexture, position.x + 3, position.y-15));
     }
     public void draw(SpriteBatch batch){
         sprite.setPosition(position.x, position.y);
         sprite.draw(batch);
-    }
+
+        }
+
 
 }

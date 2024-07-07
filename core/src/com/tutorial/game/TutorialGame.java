@@ -9,6 +9,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 
 public class TutorialGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -17,9 +21,12 @@ public class TutorialGame extends ApplicationAdapter {
 	Texture img_bullet;
 	Texture alien_img;
 	ArrayList<Alien> aliens;
-	ArrayList<Bullet> bullets;
+	ArrayList<Bullet> player_bullets;
+	ArrayList<Bullet> alien_bullets;
+	float enemy_shoot_delay = 5f;
 	boolean movingRight = true;
-	
+
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -27,7 +34,9 @@ public class TutorialGame extends ApplicationAdapter {
 		img_bullet = new Texture("bullet.png");
 		alien_img = new Texture("alien.png");
 		player = new Player(player_img,img_bullet, Color.GREEN);
-		bullets = player.bullets;
+		player_bullets = player.bullets;
+		alien_bullets = new ArrayList<>();
+
 		aliens = new ArrayList<>();
 		createAliens();
 
@@ -46,7 +55,7 @@ public class TutorialGame extends ApplicationAdapter {
 				float x = startX + col * (alien_width + 10);
 				float y = startY - row * (alien_height + 10);
 
-				aliens.add(new Alien(alien_img, Color.GREEN, x, y));
+				aliens.add(new Alien(alien_img,img_bullet, alien_bullets, Color.GREEN, x, y));
 			}
 		}
 	}
@@ -56,19 +65,44 @@ public class TutorialGame extends ApplicationAdapter {
 		ScreenUtils.clear(0, 0, 0, 1);
 		batch.begin();
 		player.draw(batch);
+		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
+
+		// check if time for alien to shoot
+		if (enemy_shoot_delay <= 0 && !aliens.isEmpty()){
+			enemy_shoot_delay = random.nextFloat(1f,5f);
+
+			int randomIndex = random.nextInt(aliens.size());
+			Alien randomAlien = aliens.get(randomIndex);
+			randomAlien.shoot();
+		}
+
 		for (Alien alien : aliens) {
 			alien.draw(batch);
 		}
+		updateAlienBullets();
 		moveAliens();
 		checkCollisions();
 		batch.end();
+	}
+
+	public void updateAlienBullets() {
+		Iterator<Bullet> iter = alien_bullets.iterator();
+		while (iter.hasNext()) {
+			Bullet bullet = iter.next();
+			bullet.alien_update(Gdx.graphics.getDeltaTime());
+
+			if (bullet.position.y < 0) {
+				iter.remove();
+			}
+			bullet.draw(batch);
+		}
 	}
 
 	public void checkCollisions() {
 		ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
 		ArrayList<Alien> aliensToRemove = new ArrayList<>();
 
-		for(Bullet bullet : bullets) {
+		for(Bullet bullet : player_bullets) {
 			for(Alien alien : aliens) {
 				if (bullet.sprite.getBoundingRectangle().overlaps(alien.sprite.getBoundingRectangle())) {
 					bulletsToRemove.add(bullet);
@@ -78,12 +112,13 @@ public class TutorialGame extends ApplicationAdapter {
 				}
 			}
 		}
-		bullets.removeAll(bulletsToRemove);
+		player_bullets.removeAll(bulletsToRemove);
 		aliens.removeAll(aliensToRemove);
 	}
 	public void moveAliens() {
 		boolean hitEdge = false;
 		for(Alien alien : aliens) {
+
 			if (movingRight) {
 				alien.position.x += 0.5;
 			} else {
