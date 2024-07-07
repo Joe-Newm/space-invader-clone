@@ -11,16 +11,20 @@ import java.awt.*;
 
 public class TutorialGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture player_img;
 	Player player;
 	Texture img_bullet;
+	Texture alien_img;
+	Alien alien;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("player.png");
+		player_img = new Texture("player.png");
 		img_bullet = new Texture("bullet.png");
-		player = new Player(img,img_bullet, Color.GREEN);
+		alien_img = new Texture("alien.png");
+		player = new Player(player_img,img_bullet, Color.GREEN);
+		alien = new Alien(alien_img, Color.GREEN);
 
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
@@ -31,12 +35,13 @@ public class TutorialGame extends ApplicationAdapter {
 		ScreenUtils.clear(0, 0, 0, 1);
 		batch.begin();
 		player.draw(batch);
+		alien.draw(batch);
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		player_img.dispose();
 	}
 }

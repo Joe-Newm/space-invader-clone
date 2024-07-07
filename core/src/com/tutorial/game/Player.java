@@ -45,7 +45,7 @@ public class Player {
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
             bullet.update(deltaTime);
-            // remove bullets off screen
+            // remove bullets off the screen
             if (bullet.position.y > Gdx.graphics.getHeight()) {
                 iterator.remove();
             }
