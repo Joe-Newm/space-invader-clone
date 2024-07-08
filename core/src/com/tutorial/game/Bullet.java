@@ -8,11 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 public class Bullet {
     public Vector2 position;
     public Sprite sprite;
-    public float speed_bullet = 5;
+    public float speed_bullet = 3;
 
     public Bullet(Texture img_bullet, float startX, float startY) {
         sprite = new Sprite(img_bullet);
-        sprite.setScale(4);
+        sprite.setScale(2);
         position = new Vector2(startX, startY);
     }
     public void player_update(float deltaTime) {

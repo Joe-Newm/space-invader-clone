@@ -3,6 +3,7 @@ package com.tutorial.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,34 +40,36 @@ public class Player {
             bullets.add(new Bullet(bulletTexture, position.x + 3, position.y));
             bullet_delay = 20;
         }
-        //Update all bullets
-        bullet_delay -=1;
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            bullet.player_update(deltaTime);
-            // remove bullets off the screen
-            if (bullet.position.y > Gdx.graphics.getHeight()) {
-                iterator.remove();
-            }
-        }
     }
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, OrthographicCamera camera) {
         update(3);
-        sprite.setPosition(position.x, position.y);
-        sprite.draw(batch);
 
         // draw all bullets
         for (Bullet bullet : bullets) {
             bullet.draw(batch);
         }
 
+        sprite.setPosition(position.x, position.y);
+        sprite.draw(batch);
+
         // collision for the border of the screen
-        if (position.x >= Gdx.graphics.getWidth() - 30) {
-            position.x = Gdx.graphics.getWidth() - 30;
+        if (position.x >= camera.viewportWidth - 30) {
+            position.x = camera.viewportWidth - 30;
         }
         if (position.x <= 30) {
             position.x = 30;
+        }
+
+        //Update all bullets
+        bullet_delay -=1;
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            bullet.player_update(3);
+            // remove bullets off the screen
+            if (bullet.position.y > camera.viewportHeight) {
+                iterator.remove();
+            }
         }
 
     }

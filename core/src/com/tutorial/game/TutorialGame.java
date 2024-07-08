@@ -3,9 +3,12 @@ package com.tutorial.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,7 +28,11 @@ public class TutorialGame extends ApplicationAdapter {
 	ArrayList<Bullet> alien_bullets;
 	float enemy_shoot_delay = 5f;
 	boolean movingRight = true;
+	private OrthographicCamera camera;
+	private Viewport viewport;
 
+	public final float VIRTUAL_WIDTH = 800;
+	private final float VIRTUAL_HEIGHT = 600;
 
 	@Override
 	public void create () {
@@ -36,9 +43,15 @@ public class TutorialGame extends ApplicationAdapter {
 		player = new Player(player_img,img_bullet, Color.GREEN);
 		player_bullets = player.bullets;
 		alien_bullets = new ArrayList<>();
-
 		aliens = new ArrayList<>();
 		createAliens();
+
+		camera = new OrthographicCamera();
+		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+		viewport.apply();
+
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
 
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
@@ -48,7 +61,7 @@ public class TutorialGame extends ApplicationAdapter {
 		float alien_width = alien_img.getWidth() *4;
 		float alien_height = alien_img.getHeight()*4;
 		float startX = Gdx.graphics.getWidth()/5.5f;
-		float startY = (float) Gdx.graphics.getHeight() - 50;
+		float startY = (float) VIRTUAL_HEIGHT - 35;
 
 		for (int row = 0; row < 5; row++){
 			for (int col = 0; col < 11; col++){
@@ -63,8 +76,11 @@ public class TutorialGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
+
 		batch.begin();
-		player.draw(batch);
+		player.draw(batch, camera);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
 
 		// check if time for alien to shoot
@@ -117,6 +133,8 @@ public class TutorialGame extends ApplicationAdapter {
 	}
 	public void moveAliens() {
 		boolean hitEdge = false;
+		float screenWidth = camera.viewportWidth;
+
 		for(Alien alien : aliens) {
 
 			if (movingRight) {
@@ -125,7 +143,7 @@ public class TutorialGame extends ApplicationAdapter {
 				alien.position.x -= 0.5;
 			}
 			// check for hitEdge
-			if (alien.position.x >= Gdx.graphics.getWidth() - alien.sprite.getWidth() || alien.position.x <= 0){
+		if (alien.position.x >= screenWidth - alien.sprite.getWidth() || alien.position.x <= 0){
 				hitEdge = true;
 			}
 
@@ -133,6 +151,12 @@ public class TutorialGame extends ApplicationAdapter {
 		if (hitEdge) {
 			movingRight = !movingRight;
 		}
+	}
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
 	}
 	
 	@Override
