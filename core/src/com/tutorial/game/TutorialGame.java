@@ -144,12 +144,15 @@ public class TutorialGame extends ApplicationAdapter {
 			}
 			// check for hitEdge
 		if (alien.position.x >= screenWidth - alien.sprite.getWidth() || alien.position.x <= 0){
-				hitEdge = true;
+			hitEdge = true;
 			}
 
 		}
 		if (hitEdge) {
 			movingRight = !movingRight;
+			for (Alien alien : aliens) {
+				alien.position.y -= 20;
+			}
 		}
 	}
 	@Override
