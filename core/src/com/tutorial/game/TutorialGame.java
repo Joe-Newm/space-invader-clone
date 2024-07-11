@@ -90,21 +90,6 @@ class GameScreen implements Screen {
 		camera.update();
 	}
 
-	public void createAliens() {
-		float alien_width = alien_img.getWidth() * 8;
-		float alien_height = alien_img.getHeight() * 9;
-		float startX = (float) VIRTUAL_WIDTH / 5.5f;
-		float startY = (float) VIRTUAL_HEIGHT - 70;
-
-		for (int row = 0; row < 5; row++) {
-			for (int col = 0; col < 11; col++) {
-				float x = startX + col * (alien_width + 10);
-				float y = startY - row * (alien_height + 10);
-
-				aliens.add(new Alien(alien_img, img_bullet, alien_bullets, Color.GREEN, x, y));
-			}
-		}
-	}
 
 	@Override
 	public void show() {
@@ -145,6 +130,47 @@ class GameScreen implements Screen {
 		checkCollisions();
 		playerCollisions();
 		batch.end();
+	}
+
+
+	public void createAliens() {
+		float alien_width = alien_img.getWidth() * 8;
+		float alien_height = alien_img.getHeight() * 9;
+		float startX = (float) VIRTUAL_WIDTH / 5.5f;
+		float startY = (float) VIRTUAL_HEIGHT - 90;
+
+		for (int row = 0; row < 5; row++) {
+			for (int col = 0; col < 11; col++) {
+				float x = startX + col * (alien_width + 10);
+				float y = startY - row * (alien_height + 10);
+
+				aliens.add(new Alien(alien_img, img_bullet, alien_bullets, Color.GREEN, x, y));
+			}
+		}
+	}
+
+	public void moveAliens() {
+		boolean hitEdge = false;
+		float screenWidth = camera.viewportWidth;
+
+		for (Alien alien : aliens) {
+
+			if (movingRight) {
+				alien.position.x += 0.5;
+			} else {
+				alien.position.x -= 0.5;
+			}
+			// check for hitEdge
+			if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {
+				hitEdge = true;
+			}
+		}
+		if (hitEdge) {
+			movingRight = !movingRight;
+			for (Alien alien : aliens) {
+				alien.position.y -= 40;
+			}
+		}
 	}
 
 	public void updateAlienBullets() {
@@ -192,29 +218,6 @@ class GameScreen implements Screen {
 		alien_bullets.removeAll(bulletsToRemove);
 	}
 
-	public void moveAliens() {
-		boolean hitEdge = false;
-		float screenWidth = camera.viewportWidth;
-
-		for (Alien alien : aliens) {
-
-			if (movingRight) {
-				alien.position.x += 0.5;
-			} else {
-				alien.position.x -= 0.5;
-			}
-			// check for hitEdge
-			if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {
-				hitEdge = true;
-			}
-		}
-		if (hitEdge) {
-			movingRight = !movingRight;
-			for (Alien alien : aliens) {
-				alien.position.y -= 20;
-			}
-		}
-	}
 
 	@Override
 	public void resize(int width, int height) {

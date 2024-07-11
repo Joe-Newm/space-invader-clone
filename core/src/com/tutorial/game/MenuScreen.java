@@ -58,8 +58,11 @@ public class MenuScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "SPACE INVADERS CLONE\n    by Joseph Newman", VIRTUAL_WIDTH /3, VIRTUAL_HEIGHT - 400);
-        font.draw(batch, "Tap to begin", VIRTUAL_WIDTH -670, VIRTUAL_HEIGHT - 600);
+        font.setColor(Color.WHITE);
+        font.draw(batch, "SPACE INVADERS CLONE\n    by Joseph Newman", VIRTUAL_WIDTH /3 - 20, VIRTUAL_HEIGHT - 400);
+
+        font.setColor(Color.GREEN);
+        font.draw(batch, "click to begin", VIRTUAL_WIDTH -700, VIRTUAL_HEIGHT - 600);
         batch.end();
 
         if (Gdx.input.justTouched()) {
