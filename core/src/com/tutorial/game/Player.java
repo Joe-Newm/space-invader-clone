@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Iterator;
+import com.badlogic.gdx.audio.Sound;
 
 public class Player {
     public Vector2 position;
@@ -18,6 +19,7 @@ public class Player {
     public ArrayList<Bullet> bullets;
     public Texture bulletTexture;
     public float bullet_delay = 20;
+    public Sound shootSound;
 
     public Player(Texture img,Texture img_bullet, Color color) {
         sprite = new Sprite(img);
@@ -27,8 +29,11 @@ public class Player {
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
 
+        // sound
+        shootSound = Gdx.audio.newSound(Gdx.files.internal("sound/shoot-sound.wav"));
 
     }
+
     public void update(float deltaTime) {
         if(Gdx.input.isKeyPressed(Keys.LEFT)){
             position.x -= deltaTime * speed;
@@ -39,6 +44,7 @@ public class Player {
         if(Gdx.input.isKeyPressed(Keys.SPACE) && bullet_delay < 0){
             bullets.add(new Bullet(bulletTexture, position.x + 3, position.y));
             bullet_delay = 20;
+            shootSound.play(0.1f);
         }
     }
     public void draw(SpriteBatch batch, OrthographicCamera camera) {

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ class GameScreen implements Screen {
 	private int lives;
 	private int score;
 
+	private Sound shootSound;
+
+
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
 
@@ -71,6 +75,7 @@ class GameScreen implements Screen {
 		shapeRenderer = new ShapeRenderer();
 		lives = 3;
 		score = 0;
+
 
 		// add camera
 		camera = new OrthographicCamera();
