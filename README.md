@@ -2,6 +2,8 @@ Creating my own version of space invaders to learn java fundamentals using the l
 
 
 TO-DO:
+[X] make window scale appropriately
+[X] make enemies move down when hitting edge
 [] add collision to player from enemy bullets
 [] add lives
 [] add score
@@ -10,4 +12,3 @@ TO-DO:
 [] add levels
 [] add different types of enemies
 [] make bullets only shoot one at a time, cant shoot till last one is done
-[] 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class TutorialGame extends ApplicationAdapter {
 	boolean movingRight = true;
 	private OrthographicCamera camera;
 	private Viewport viewport;
+	private ShapeRenderer shapeRenderer;
 
 	public final float VIRTUAL_WIDTH = 800;
 	private final float VIRTUAL_HEIGHT = 600;
@@ -45,6 +47,8 @@ public class TutorialGame extends ApplicationAdapter {
 		alien_bullets = new ArrayList<>();
 		aliens = new ArrayList<>();
 		createAliens();
+		shapeRenderer = new ShapeRenderer();
+
 
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
@@ -61,7 +65,7 @@ public class TutorialGame extends ApplicationAdapter {
 		float alien_width = alien_img.getWidth() *4;
 		float alien_height = alien_img.getHeight()*4;
 		float startX = Gdx.graphics.getWidth()/5.5f;
-		float startY = (float) VIRTUAL_HEIGHT - 35;
+		float startY = (float) VIRTUAL_HEIGHT - 45;
 
 		for (int row = 0; row < 5; row++){
 			for (int col = 0; col < 11; col++){
@@ -99,6 +103,10 @@ public class TutorialGame extends ApplicationAdapter {
 		moveAliens();
 		checkCollisions();
 		batch.end();
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(Color.LIGHT_GRAY);
+		shapeRenderer.rect(0,460, viewport.getScreenWidth(), 20);
+		shapeRenderer.end();
 	}
 
 	public void updateAlienBullets() {
