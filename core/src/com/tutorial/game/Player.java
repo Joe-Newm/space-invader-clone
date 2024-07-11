@@ -14,7 +14,7 @@ import java.util.Iterator;
 public class Player {
     public Vector2 position;
     public Sprite sprite;
-    public float speed = 3;
+    public float speed = 2.5f;
     public ArrayList<Bullet> bullets;
     public Texture bulletTexture;
     public float bullet_delay = 20;

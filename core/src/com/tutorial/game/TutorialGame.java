@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class TutorialGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private ShapeRenderer shapeRenderer;
+	private BitmapFont font;
+	private int lives;
+	private int score;
 
 	public final float VIRTUAL_WIDTH = 800;
 	private final float VIRTUAL_HEIGHT = 600;
@@ -48,7 +52,8 @@ public class TutorialGame extends ApplicationAdapter {
 		aliens = new ArrayList<>();
 		createAliens();
 		shapeRenderer = new ShapeRenderer();
-
+		lives = 3;
+		score = 0;
 
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
@@ -56,6 +61,11 @@ public class TutorialGame extends ApplicationAdapter {
 
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
+
+		// add font
+		font = new BitmapFont();
+		font.getData().setScale(1);
+		font.setColor(Color.BLACK);
 
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
@@ -83,7 +93,15 @@ public class TutorialGame extends ApplicationAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
+
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(Color.LIGHT_GRAY);
+		shapeRenderer.rect(0,460, viewport.getScreenWidth(), 20);
+		shapeRenderer.end();
+
 		batch.begin();
+		font.draw(batch, "LIVES: " + lives,20, 595);
+		font.draw(batch, "SCORE: " + score,100, 595);
 		player.draw(batch, camera);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
 
@@ -104,10 +122,6 @@ public class TutorialGame extends ApplicationAdapter {
 		checkCollisions();
 		playerCollisions();
 		batch.end();
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(Color.LIGHT_GRAY);
-		shapeRenderer.rect(0,460, viewport.getScreenWidth(), 20);
-		shapeRenderer.end();
 	}
 
 	public void updateAlienBullets() {
@@ -132,6 +146,7 @@ public class TutorialGame extends ApplicationAdapter {
 				if (bullet.sprite.getBoundingRectangle().overlaps(alien.sprite.getBoundingRectangle())) {
 					bulletsToRemove.add(bullet);
 					aliensToRemove.add(alien);
+					score += 10;
 					System.out.println("Bullet collided with " + bullet.sprite.getBoundingRectangle());
 					break;
 				}
@@ -139,6 +154,7 @@ public class TutorialGame extends ApplicationAdapter {
 		}
 		player_bullets.removeAll(bulletsToRemove);
 		aliens.removeAll(aliensToRemove);
+
 	}
 
 	public void playerCollisions() {
@@ -148,6 +164,7 @@ public class TutorialGame extends ApplicationAdapter {
 			if (bullet.sprite.getBoundingRectangle().overlaps(player.sprite.getBoundingRectangle())) {
 				bulletsToRemove.add(bullet);
 				System.out.println("Bullet collided with the player" + bullet.sprite.getBoundingRectangle());
+				lives -= 1;
 			}
 		}
 		alien_bullets.removeAll(bulletsToRemove);

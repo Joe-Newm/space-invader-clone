@@ -5,8 +5,8 @@ TO-DO:
 [X] make window scale appropriately
 [X] make enemies move down when hitting edge
 [X] add collision to player from enemy bullets
-[] add lives
-[] add score
+[X] add lives
+[X] add score
 [] add menu
 [] add explosion on bullet collision
 [] add levels
