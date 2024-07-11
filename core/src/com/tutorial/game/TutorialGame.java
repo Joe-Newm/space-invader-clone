@@ -53,13 +53,10 @@ class GameScreen implements Screen {
 	private int lives;
 	private int score;
 
-	private Sound shootSound;
-
-
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
 
-	private final Game game;
+	public final Game game;
 
 	public GameScreen(Game game) {
 		this.game = game;

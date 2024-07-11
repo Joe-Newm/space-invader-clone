@@ -41,7 +41,7 @@ public class Player {
         if(Gdx.input.isKeyPressed(Keys.RIGHT)){
             position.x += deltaTime * speed;
         }
-        if(Gdx.input.isKeyPressed(Keys.SPACE) && bullet_delay < 0){
+        if(Gdx.input.isKeyPressed(Keys.SPACE) && bullet_delay < 0 && bullets.isEmpty()){
             bullets.add(new Bullet(bulletTexture, position.x + 3, position.y));
             bullet_delay = 20;
             shootSound.play(0.1f);
