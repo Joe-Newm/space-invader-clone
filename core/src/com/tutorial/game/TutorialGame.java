@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Screen;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -26,7 +27,9 @@ public class TutorialGame extends Game {
 	}
 
 	public void startGame() {
-		setScreen(new GameScreen(this));
+		GameScreen gameScreen = new GameScreen(this);
+		setScreen(gameScreen);
+		gameScreen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 }
 
@@ -48,7 +51,7 @@ class GameScreen implements Screen {
 	private int lives;
 	private int score;
 
-	public final float VIRTUAL_WIDTH = 800;
+	private final float VIRTUAL_WIDTH = 800;
 	private final float VIRTUAL_HEIGHT = 600;
 
 	private final Game game;
@@ -70,11 +73,6 @@ class GameScreen implements Screen {
 
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
-		viewport.apply();
-
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-		camera.update();
-
 		// add font
 		font = new BitmapFont();
 		font.getData().setScale(1);
@@ -82,12 +80,15 @@ class GameScreen implements Screen {
 
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
+
+		camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
+		camera.update();
 	}
 
 	public void createAliens() {
 		float alien_width = alien_img.getWidth() * 4;
 		float alien_height = alien_img.getHeight() * 4;
-		float startX = Gdx.graphics.getWidth() / 5.5f;
+		float startX = (float) VIRTUAL_WIDTH / 5.5f;
 		float startY = (float) VIRTUAL_HEIGHT - 45;
 
 		for (int row = 0; row < 5; row++) {
@@ -109,10 +110,11 @@ class GameScreen implements Screen {
 		ScreenUtils.clear(0, 0, 0, 1);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
+		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
-		shapeRenderer.rect(0, 460, viewport.getScreenWidth(), 20);
+		shapeRenderer.rect(0, VIRTUAL_HEIGHT -20, VIRTUAL_WIDTH, 20);
 		shapeRenderer.end();
 
 		batch.begin();
