@@ -91,8 +91,8 @@ class GameScreen implements Screen {
 	}
 
 	public void createAliens() {
-		float alien_width = alien_img.getWidth() * 7;
-		float alien_height = alien_img.getHeight() * 7;
+		float alien_width = alien_img.getWidth() * 8;
+		float alien_height = alien_img.getHeight() * 9;
 		float startX = (float) VIRTUAL_WIDTH / 5.5f;
 		float startY = (float) VIRTUAL_HEIGHT - 70;
 

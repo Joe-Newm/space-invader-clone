@@ -7,7 +7,11 @@ TO-DO:
 [X] add collision to player from enemy bullets
 [X] add lives
 [X] add score
-[] add menu
+[] death functionality
+[] add music
+[] add sound effects
+[X] add menu
+[] make menu look better
 [] add explosion on bullet collision
 [] add levels
 [] add different types of enemies
