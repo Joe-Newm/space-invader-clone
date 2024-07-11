@@ -102,6 +102,7 @@ public class TutorialGame extends ApplicationAdapter {
 		updateAlienBullets();
 		moveAliens();
 		checkCollisions();
+		playerCollisions();
 		batch.end();
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
@@ -139,6 +140,20 @@ public class TutorialGame extends ApplicationAdapter {
 		player_bullets.removeAll(bulletsToRemove);
 		aliens.removeAll(aliensToRemove);
 	}
+
+	public void playerCollisions() {
+		ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+
+		for (Bullet bullet : alien_bullets) {
+			if (bullet.sprite.getBoundingRectangle().overlaps(player.sprite.getBoundingRectangle())) {
+				bulletsToRemove.add(bullet);
+				System.out.println("Bullet collided with the player" + bullet.sprite.getBoundingRectangle());
+			}
+		}
+		alien_bullets.removeAll(bulletsToRemove);
+
+	}
+
 	public void moveAliens() {
 		boolean hitEdge = false;
 		float screenWidth = camera.viewportWidth;
