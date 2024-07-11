@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -51,8 +52,8 @@ class GameScreen implements Screen {
 	private int lives;
 	private int score;
 
-	private final float VIRTUAL_WIDTH = 800;
-	private final float VIRTUAL_HEIGHT = 600;
+	private final float VIRTUAL_WIDTH = 1200;
+	private final float VIRTUAL_HEIGHT = 1000;
 
 	private final Game game;
 
@@ -71,13 +72,17 @@ class GameScreen implements Screen {
 		lives = 3;
 		score = 0;
 
+		// add camera
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
-		// add font
-		font = new BitmapFont();
-		font.getData().setScale(1);
-		font.setColor(Color.BLACK);
 
+		// add font
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pixellari.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 30;
+		parameter.color = Color.BLACK;
+		font = generator.generateFont(parameter);
+		generator.dispose();
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
 
@@ -86,10 +91,10 @@ class GameScreen implements Screen {
 	}
 
 	public void createAliens() {
-		float alien_width = alien_img.getWidth() * 4;
-		float alien_height = alien_img.getHeight() * 4;
+		float alien_width = alien_img.getWidth() * 7;
+		float alien_height = alien_img.getHeight() * 7;
 		float startX = (float) VIRTUAL_WIDTH / 5.5f;
-		float startY = (float) VIRTUAL_HEIGHT - 45;
+		float startY = (float) VIRTUAL_HEIGHT - 70;
 
 		for (int row = 0; row < 5; row++) {
 			for (int col = 0; col < 11; col++) {
@@ -114,12 +119,12 @@ class GameScreen implements Screen {
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(Color.LIGHT_GRAY);
-		shapeRenderer.rect(0, VIRTUAL_HEIGHT -20, VIRTUAL_WIDTH, 20);
+		shapeRenderer.rect(0, VIRTUAL_HEIGHT -40, VIRTUAL_WIDTH, 40);
 		shapeRenderer.end();
 
 		batch.begin();
-		font.draw(batch, "LIVES: " + lives, 20, 595);
-		font.draw(batch, "SCORE: " + score, 100, 595);
+		font.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
+		font.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
 		player.draw(batch, camera);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
 
@@ -199,7 +204,7 @@ class GameScreen implements Screen {
 				alien.position.x -= 0.5;
 			}
 			// check for hitEdge
-			if (alien.position.x >= screenWidth - alien.sprite.getWidth() || alien.position.x <= 0) {
+			if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {
 				hitEdge = true;
 			}
 		}

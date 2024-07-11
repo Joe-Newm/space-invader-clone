@@ -22,7 +22,7 @@ public class Player {
     public Player(Texture img,Texture img_bullet, Color color) {
         sprite = new Sprite(img);
         sprite.setColor(color);
-        sprite.setScale(4);
+        sprite.setScale(7);
         position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2);
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
@@ -53,11 +53,11 @@ public class Player {
         sprite.draw(batch);
 
         // collision for the border of the screen
-        if (position.x >= camera.viewportWidth - 30) {
-            position.x = camera.viewportWidth - 30;
+        if (position.x >= camera.viewportWidth - sprite.getWidth() * 6) {
+            position.x = camera.viewportWidth - sprite.getWidth() *6;
         }
-        if (position.x <= 30) {
-            position.x = 30;
+        if (position.x <= sprite.getWidth() * 7) {
+            position.x = sprite.getWidth() * 7;
         }
 
         //Update all bullets

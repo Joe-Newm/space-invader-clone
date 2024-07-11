@@ -22,8 +22,8 @@ public class MenuScreen implements Screen {
     private BitmapFont font;
     private Viewport viewport;
     private ShapeRenderer shapeRenderer;
-    private final float VIRTUAL_WIDTH = 800;
-    private final float VIRTUAL_HEIGHT = 600;
+    private final float VIRTUAL_WIDTH = 1200;
+    private final float VIRTUAL_HEIGHT = 1000;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -35,7 +35,7 @@ public class MenuScreen implements Screen {
         //font stuff
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pixellari.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 20;
+        parameter.size = 40;
         parameter.color = Color.WHITE;
         font = generator.generateFont(parameter);
         generator.dispose();
@@ -58,8 +58,8 @@ public class MenuScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "SPACE INVADERS CLONE\n    by Joseph Newman", 290, 400);
-        font.draw(batch, "Tap to begin", 345, 300);
+        font.draw(batch, "SPACE INVADERS CLONE\n    by Joseph Newman", VIRTUAL_WIDTH /3, VIRTUAL_HEIGHT - 400);
+        font.draw(batch, "Tap to begin", VIRTUAL_WIDTH -670, VIRTUAL_HEIGHT - 600);
         batch.end();
 
         if (Gdx.input.justTouched()) {

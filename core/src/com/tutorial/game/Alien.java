@@ -19,7 +19,7 @@ public class Alien {
     public Alien(Texture img,Texture img_bullet, ArrayList<Bullet> bullets, Color color, float startX, float startY) {
         sprite = new Sprite(img);
         sprite.setColor(color);
-        sprite.setScale(4);
+        sprite.setScale(7);
         position = new Vector2(startX, startY);
         bulletTexture = img_bullet;
         this.bullets = bullets;
