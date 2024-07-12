@@ -7,6 +7,7 @@ TO-DO:
 [X] add collision to player from enemy bullets
 [X] add lives
 [X] add score
+[X] add Fullscreen toggle
 [] fix hit box on aliens so bullet doesnt hit aliens behind other aliens
 [] death functionality
 [] add music
