@@ -67,8 +67,7 @@ class GameScreen implements Screen {
 		player = new Player(player_img, img_bullet, Color.GREEN);
 		player_bullets = player.bullets;
 		alien_bullets = new ArrayList<>();
-		aliens = new ArrayList<>();
-		createAliens();
+		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, img_bullet, alien_bullets);
 		shapeRenderer = new ShapeRenderer();
 		lives = 3;
 		score = 0;
@@ -112,6 +111,7 @@ class GameScreen implements Screen {
 		batch.begin();
 		font.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
 		font.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
+
 		player.draw(batch, camera);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
 
@@ -135,21 +135,21 @@ class GameScreen implements Screen {
 	}
 
 
-	public void createAliens() {
-		float alien_width = alien_img.getWidth() * 8;
-		float alien_height = alien_img.getHeight() * 9;
-		float startX = (float) VIRTUAL_WIDTH / 5.5f;
-		float startY = (float) VIRTUAL_HEIGHT - 90;
-
-		for (int row = 0; row < 5; row++) {
-			for (int col = 0; col < 11; col++) {
-				float x = startX + col * (alien_width + 10);
-				float y = startY - row * (alien_height + 10);
-
-				aliens.add(new Alien(alien_img, img_bullet, alien_bullets, Color.GREEN, x, y));
-			}
-		}
-	}
+//	public void createAliens() {
+//		float alien_width = alien_img.getWidth() * 8;
+//		float alien_height = alien_img.getHeight() * 9;
+//		float startX = (float) VIRTUAL_WIDTH / 5.5f;
+//		float startY = (float) VIRTUAL_HEIGHT - 90;
+//
+//		for (int row = 0; row < 5; row++) {
+//			for (int col = 0; col < 11; col++) {
+//				float x = startX + col * (alien_width + 10);
+//				float y = startY - row * (alien_height + 10);
+//
+//				aliens.add(new Alien(alien_img, img_bullet, alien_bullets, Color.GREEN, x, y));
+//			}
+//		}
+//	}
 
 	public void moveAliens() {
 		boolean hitEdge = false;
