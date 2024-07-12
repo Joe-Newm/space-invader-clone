@@ -24,7 +24,7 @@ public class Player {
     public Player(Texture img,Texture img_bullet, Color color) {
         sprite = new Sprite(img);
         sprite.setColor(color);
-        sprite.setScale(7);
+        sprite.setScale(8);
         position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2);
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
@@ -42,7 +42,7 @@ public class Player {
             position.x += deltaTime * speed;
         }
         if(Gdx.input.isKeyPressed(Keys.SPACE) && bullet_delay < 0 && bullets.isEmpty()){
-            bullets.add(new Bullet(bulletTexture, position.x + 3, position.y));
+            bullets.add(new Bullet(bulletTexture, position.x + 3, position.y, 5));
             bullet_delay = 20;
             shootSound.play(0.1f);
         }

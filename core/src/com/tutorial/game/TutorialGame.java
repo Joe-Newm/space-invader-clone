@@ -13,12 +13,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
@@ -67,7 +65,7 @@ class GameScreen implements Screen {
 		player = new Player(player_img, img_bullet, Color.GREEN);
 		player_bullets = player.bullets;
 		alien_bullets = new ArrayList<>();
-		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, img_bullet, alien_bullets);
+		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		shapeRenderer = new ShapeRenderer();
 		lives = 3;
 		score = 0;
@@ -80,17 +78,14 @@ class GameScreen implements Screen {
 		// add font
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pixellari.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 30;
+		parameter.size = 23;
 		parameter.color = Color.BLACK;
 		font = generator.generateFont(parameter);
 		generator.dispose();
+
 		// set FPS
 		Gdx.graphics.setForegroundFPS(60);
-
-		camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
-		camera.update();
 	}
-
 
 	@Override
 	public void show() {
@@ -128,51 +123,10 @@ class GameScreen implements Screen {
 			alien.draw(batch);
 		}
 		updateAlienBullets();
-		moveAliens();
+		Alien.moveAliens( aliens, camera);
 		checkCollisions();
 		playerCollisions();
 		batch.end();
-	}
-
-
-//	public void createAliens() {
-//		float alien_width = alien_img.getWidth() * 8;
-//		float alien_height = alien_img.getHeight() * 9;
-//		float startX = (float) VIRTUAL_WIDTH / 5.5f;
-//		float startY = (float) VIRTUAL_HEIGHT - 90;
-//
-//		for (int row = 0; row < 5; row++) {
-//			for (int col = 0; col < 11; col++) {
-//				float x = startX + col * (alien_width + 10);
-//				float y = startY - row * (alien_height + 10);
-//
-//				aliens.add(new Alien(alien_img, img_bullet, alien_bullets, Color.GREEN, x, y));
-//			}
-//		}
-//	}
-
-	public void moveAliens() {
-		boolean hitEdge = false;
-		float screenWidth = camera.viewportWidth;
-
-		for (Alien alien : aliens) {
-
-			if (movingRight) {
-				alien.position.x += 0.5;
-			} else {
-				alien.position.x -= 0.5;
-			}
-			// check for hitEdge
-			if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {
-				hitEdge = true;
-			}
-		}
-		if (hitEdge) {
-			movingRight = !movingRight;
-			for (Alien alien : aliens) {
-				alien.position.y -= 40;
-			}
-		}
 	}
 
 	public void updateAlienBullets() {

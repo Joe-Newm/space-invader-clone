@@ -10,10 +10,11 @@ public class Bullet {
     public Sprite sprite;
     public float speed_bullet = 3;
 
-    public Bullet(Texture img_bullet, float startX, float startY) {
+    public Bullet(Texture img_bullet, float startX, float startY, float speed) {
         sprite = new Sprite(img_bullet);
         sprite.setScale(2);
         position = new Vector2(startX, startY);
+        speed_bullet = speed;
     }
     public void player_update(float deltaTime) {
         position.y += deltaTime * speed_bullet;
