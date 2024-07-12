@@ -1,7 +1,6 @@
-package com.tutorial.game;
+package com.space.invaders;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.Screen;
 
 
 import java.util.ArrayList;
@@ -21,15 +19,38 @@ import java.util.Iterator;
 import static com.badlogic.gdx.math.MathUtils.random;
 
 public class SpaceInvaders extends Game {
+	private boolean isFullScreenToggled = false;
+
 	@Override
 	public void create() {
 		setScreen(new MenuScreen(this));
+	}
+	@Override
+	public void render() {
+		super.render();
+		screenControl();
 	}
 
 	public void startGame() {
 		GameScreen gameScreen = new GameScreen(this);
 		setScreen(gameScreen);
 		gameScreen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	public void screenControl() {
+		if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+			if (!isFullScreenToggled) {
+				isFullScreenToggled = true;
+				if (Gdx.graphics.isFullscreen()) {
+					Gdx.graphics.setWindowedMode(800, 600);
+				} else {
+					Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+					Gdx.graphics.setFullscreenMode(displayMode);
+				}
+			}
+		} else {
+			isFullScreenToggled = false;
+		}
 	}
 }
 
@@ -76,9 +97,9 @@ class GameScreen implements Screen {
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
 
 		// add font
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pixellari.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/C&C Red Alert [INET].ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 23;
+		parameter.size = 38;
 		parameter.color = Color.BLACK;
 		font = generator.generateFont(parameter);
 		generator.dispose();
@@ -191,6 +212,9 @@ class GameScreen implements Screen {
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 	}
+
+
+
 
 	@Override
 	public void pause() {
