@@ -25,7 +25,7 @@ public class Player {
         sprite = new Sprite(img);
         sprite.setColor(color);
         sprite.setScale(8);
-        position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2);
+        position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2 + 100);
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
 

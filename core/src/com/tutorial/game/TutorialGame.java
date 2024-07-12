@@ -103,6 +103,11 @@ class GameScreen implements Screen {
 		shapeRenderer.rect(0, VIRTUAL_HEIGHT -40, VIRTUAL_WIDTH, 40);
 		shapeRenderer.end();
 
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(0, 75, VIRTUAL_WIDTH, 4);
+		shapeRenderer.end();
+
 		batch.begin();
 		font.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
 		font.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
