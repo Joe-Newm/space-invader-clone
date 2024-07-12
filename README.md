@@ -13,7 +13,7 @@ TO-DO:
 [] add sound effects
 [X] add menu
 [] make menu look better
-[] add explosion on bullet collision
+[X] add explosion on bullet collision
 [] add levels
 [] add different types of enemies
 [] make bullets only shoot one at a time, cant shoot till last one is done

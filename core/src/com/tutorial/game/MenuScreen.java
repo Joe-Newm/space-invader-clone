@@ -66,7 +66,7 @@ public class MenuScreen implements Screen {
         batch.end();
 
         if (Gdx.input.justTouched()) {
-            ((TutorialGame) game).startGame();
+            ((SpaceInvaders) game).startGame();
         }
     }
 

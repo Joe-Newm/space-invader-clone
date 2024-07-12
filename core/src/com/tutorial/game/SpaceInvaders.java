@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import static com.badlogic.gdx.math.MathUtils.random;
 
-public class TutorialGame extends Game {
+public class SpaceInvaders extends Game {
 	@Override
 	public void create() {
 		setScreen(new MenuScreen(this));
@@ -124,8 +124,12 @@ class GameScreen implements Screen {
 			randomAlien.shoot();
 		}
 
-		for (Alien alien : aliens) {
-			alien.draw(batch);
+		for (Iterator<Alien> iter = aliens.iterator(); iter.hasNext(); ) {
+			Alien alien = iter.next();
+			alien.draw(batch, delta); // Pass delta time to the draw method
+			if (alien.isExplosionFinished()) {
+				iter.remove(); // Remove alien after explosion animation finishes
+			}
 		}
 		updateAlienBullets();
 		Alien.moveAliens( aliens, camera);
@@ -155,15 +159,16 @@ class GameScreen implements Screen {
 			for (Alien alien : aliens) {
 				if (bullet.sprite.getBoundingRectangle().overlaps(alien.sprite.getBoundingRectangle())) {
 					bulletsToRemove.add(bullet);
-					aliensToRemove.add(alien);
+					alien.triggerExplosion();
+
 					score += 10;
+
 					System.out.println("Bullet collided with " + bullet.sprite.getBoundingRectangle());
 					break;
 				}
 			}
 		}
 		player_bullets.removeAll(bulletsToRemove);
-		aliens.removeAll(aliensToRemove);
 	}
 
 	public void playerCollisions() {
