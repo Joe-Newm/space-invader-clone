@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Timer;
 
 
 import java.util.ArrayList;
@@ -71,6 +73,11 @@ class GameScreen implements Screen {
 	private BitmapFont font;
 	private int lives;
 	private int score;
+	private boolean isPaused = false;
+	private float pauseDuration = 3.0f;
+
+	private float pauseTimer = 0;
+	private boolean waitingForExplosion = false;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
@@ -114,6 +121,10 @@ class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		if (isPaused) {
+			// Skip game update logic while paused
+			return;
+		}
 		ScreenUtils.clear(0, 0, 0, 1);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
@@ -133,7 +144,7 @@ class GameScreen implements Screen {
 		font.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
 		font.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
 
-		player.draw(batch, camera);
+		player.draw(batch, camera, delta);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
 
 		// check if time for alien to shoot
@@ -198,12 +209,32 @@ class GameScreen implements Screen {
 		for (Bullet bullet : alien_bullets) {
 			if (bullet.sprite.getBoundingRectangle().overlaps(player.sprite.getBoundingRectangle())) {
 				bulletsToRemove.add(bullet);
+				player.triggerExplosion();
+
 				System.out.println("Bullet collided with the player" + bullet.sprite.getBoundingRectangle());
-				lives -= 1;
+				if (lives > 0 && !waitingForExplosion) {
+					lives -= 1;
+					waitingForExplosion = true;
+					Timer.schedule(new Timer.Task() {
+						@Override
+						public void run() {
+							waitingForExplosion = false;
+							pauseGameForDuration(3.0f);
+							Timer.schedule(new Timer.Task(){
+								@Override
+								public void run() {
+									player.position =  new Vector2((float) Gdx.graphics.getWidth() /2,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
+								}
+							},1.0f);
+						}
+					}, player.getExplosionTime()); // Pause after explosion animation
+				}
+
 			}
 		}
 		alien_bullets.removeAll(bulletsToRemove);
 	}
+
 
 
 	@Override
@@ -213,7 +244,25 @@ class GameScreen implements Screen {
 		camera.update();
 	}
 
+	private void pauseGame() {
+		Gdx.app.log("MyGame", "Game is pausing for " + pauseDuration + " seconds");
+		isPaused = true;
+		Timer.schedule(new Timer.Task() {
+			@Override
+			public void run() {
+				resumeGame();
+			}
+		}, pauseDuration);
+	}
 
+	private void resumeGame() {
+		isPaused = false;
+	}
+
+	public void pauseGameForDuration(float duration) {
+		this.pauseDuration = duration;
+		pauseGame();
+	}
 
 
 	@Override
