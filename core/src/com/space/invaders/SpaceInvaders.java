@@ -77,6 +77,7 @@ class GameScreen implements Screen {
 	private float pauseDuration = 3.0f;
 	private boolean waitingForExplosion = false;
 	public Sound deathSound;
+	public Sound gameOver;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
@@ -99,10 +100,14 @@ class GameScreen implements Screen {
 
 		// death sound during pause
 		deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
+		gameOver = Gdx.audio.newSound(Gdx.files.internal("sound/game-over.wav"));
 
 		// add camera
 		camera = new OrthographicCamera();
-		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport.apply();
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
 
 		// add font
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/C&C Red Alert [INET].ttf"));
@@ -175,7 +180,6 @@ class GameScreen implements Screen {
 		while (iter.hasNext()) {
 			Bullet bullet = iter.next();
 			bullet.alien_update(Gdx.graphics.getDeltaTime());
-
 			if (bullet.position.y < 0) {
 				iter.remove();
 			}
@@ -186,7 +190,6 @@ class GameScreen implements Screen {
 	public void checkCollisions() {
 		ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
 		ArrayList<Alien> aliensToRemove = new ArrayList<>();
-
 		for (Bullet bullet : player_bullets) {
 			for (Alien alien : aliens) {
 				if (bullet.sprite.getBoundingRectangle().overlaps(alien.sprite.getBoundingRectangle())) {
@@ -210,17 +213,16 @@ class GameScreen implements Screen {
 			if (bullet.sprite.getBoundingRectangle().overlaps(player.sprite.getBoundingRectangle())) {
 				bulletsToRemove.add(bullet);
 				player.triggerExplosion();
-
 				System.out.println("Bullet collided with the player" + bullet.sprite.getBoundingRectangle());
 				if (lives > 0 && !waitingForExplosion) {
 					lives -= 1;
 					waitingForExplosion = true;
-					deathSound.play(0.1f);
 					Timer.schedule(new Timer.Task() {
 						@Override
 						public void run() {
 							waitingForExplosion = false;
 							pauseGameForDuration(2.0f);
+							deathSound.play(0.1f);
 							Timer.schedule(new Timer.Task(){
 								@Override
 								public void run() {
@@ -230,6 +232,16 @@ class GameScreen implements Screen {
 							},1.0f);
 						}
 					}, 0.25f); // Pause after explosion animation
+				} else {
+					gameOver.play(0.1f);
+					player.triggerExplosion();
+					Timer.schedule(new Timer.Task() {
+						@Override
+						public void run() {
+							waitingForExplosion = false;
+							isPaused = true;
+						}
+					}, 0.4f);
 				}
 			}
 		}
@@ -238,7 +250,7 @@ class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		viewport.update(width, height);
+		viewport.update(width, height, true);
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		camera.update();
 	}
@@ -262,7 +274,6 @@ class GameScreen implements Screen {
 		this.pauseDuration = duration;
 		pauseGame();
 	}
-
 
 	@Override
 	public void pause() {
