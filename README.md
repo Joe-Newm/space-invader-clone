@@ -8,13 +8,15 @@ TO-DO:
 [X] add lives
 [X] add score
 [X] add Fullscreen toggle
-[] fix hit box on aliens so bullet doesnt hit aliens behind other aliens
-[] death functionality
+[] fix hit box on aliens so bullet doesn't hit aliens behind other aliens
+[X] death functionality
 [] add music
 [] add sound effects
 [X] add menu
-[] make menu look better
+[X] make menu look better
 [X] add explosion on bullet collision
-[] add levels
+[X] add levels
 [] add different types of enemies
-[] make bullets only shoot one at a time, cant shoot till last one is done
+[X] make bullets only shoot one at a time, cant shoot till last one is done
+[] improve difficulty
+[] die when enemies make it to bottom
