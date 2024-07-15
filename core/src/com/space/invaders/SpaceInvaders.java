@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Timer;
-
+import com.badlogic.gdx.audio.Sound;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -75,9 +75,8 @@ class GameScreen implements Screen {
 	private int score;
 	private boolean isPaused = false;
 	private float pauseDuration = 3.0f;
-
-	private float pauseTimer = 0;
 	private boolean waitingForExplosion = false;
+	public Sound deathSound;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
@@ -98,6 +97,8 @@ class GameScreen implements Screen {
 		lives = 3;
 		score = 0;
 
+		// death sound during pause
+		deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
 
 		// add camera
 		camera = new OrthographicCamera();
@@ -150,7 +151,6 @@ class GameScreen implements Screen {
 		// check if time for alien to shoot
 		if (enemy_shoot_delay <= 0 && !aliens.isEmpty()) {
 			enemy_shoot_delay = random.nextFloat(1f, 5f);
-
 			int randomIndex = random.nextInt(aliens.size());
 			Alien randomAlien = aliens.get(randomIndex);
 			randomAlien.shoot();
@@ -215,27 +215,26 @@ class GameScreen implements Screen {
 				if (lives > 0 && !waitingForExplosion) {
 					lives -= 1;
 					waitingForExplosion = true;
+					deathSound.play(0.1f);
 					Timer.schedule(new Timer.Task() {
 						@Override
 						public void run() {
 							waitingForExplosion = false;
-							pauseGameForDuration(3.0f);
+							pauseGameForDuration(2.0f);
 							Timer.schedule(new Timer.Task(){
 								@Override
 								public void run() {
-									player.position =  new Vector2((float) Gdx.graphics.getWidth() /2,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
+									player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
+									player.respawn();
 								}
 							},1.0f);
 						}
-					}, player.getExplosionTime()); // Pause after explosion animation
+					}, 0.25f); // Pause after explosion animation
 				}
-
 			}
 		}
 		alien_bullets.removeAll(bulletsToRemove);
 	}
-
-
 
 	@Override
 	public void resize(int width, int height) {

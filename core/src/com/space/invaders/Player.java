@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.audio.Sound;
 
 public class Player {
@@ -22,17 +24,18 @@ public class Player {
     public Texture bulletTexture;
     public float bullet_delay = 20;
     public Sound shootSound;
+    public Sound deathSound;
     public Animation<TextureRegion> explosionAnimation;
     public float stateTime;
     private boolean exploding;
     public float SCALE = 8;
-    private float explosionTime = 0.25f;
+    private boolean visible = true;
 
     public Player(Texture img,Texture img_bullet, Color color) {
         sprite = new Sprite(img);
         sprite.setColor(color);
         sprite.setScale(SCALE);
-        position = new Vector2((float) Gdx.graphics.getWidth() /2,sprite.getScaleY()*sprite.getHeight()/2 + 100);
+        position = new Vector2(sprite.getWidth()*7,sprite.getScaleY()*sprite.getHeight()/2 + 100);
         bullets = new ArrayList<>();
         bulletTexture = img_bullet;
 
@@ -80,8 +83,13 @@ public class Player {
         return explosionAnimation.isAnimationFinished(stateTime);
     }
 
-    public float getExplosionTime() {
-        return explosionTime;
+
+
+    public void respawn() {
+        // Logic to respawn the player
+        position.set(position);
+        sprite.setPosition(position.x, position.y);
+        visible = true;
     }
 
     public void draw(SpriteBatch batch, OrthographicCamera camera, float delta) {
@@ -112,20 +120,21 @@ public class Player {
             }
         }
         if (exploding) {
+
             stateTime += delta;
             TextureRegion currentFrame = explosionAnimation.getKeyFrame(stateTime, false);
             if (explosionAnimation.isAnimationFinished(stateTime)) {
                 exploding = false; // Once the animation is done, set exploding to false
+                visible = false;
             }
             float explosionWidth = currentFrame.getRegionWidth() * SCALE;
             float explosionHeight = currentFrame.getRegionHeight() * SCALE;
             float offsetX = (sprite.getWidth() * SCALE - explosionWidth) / 2 -23;
             float offsetY = (sprite.getHeight() * SCALE - explosionHeight) / 2 -23;
             batch.draw(currentFrame, position.x + offsetX, position.y + offsetY, explosionWidth, explosionHeight);
-        } else {
+        } else if (visible) {
             sprite.setPosition(position.x, position.y);
             sprite.draw(batch);
-        }
-
+            }
     }
 }
