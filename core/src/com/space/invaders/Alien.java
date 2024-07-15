@@ -88,16 +88,16 @@ public class Alien {
         return explosionAnimation.isAnimationFinished(stateTime);
     }
 
-    public static void moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera) {
+    public static void moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera,float speed) {
         boolean hitEdge = false;
         float screenWidth = camera.viewportWidth;
 
         for (Alien alien : aliens) {
 
             if (movingRight) {
-                alien.position.x += 0.5;
+                alien.position.x += speed;
             } else {
-                alien.position.x -= 0.5;
+                alien.position.x -= speed;
             }
             // check for hitEdge
             if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {

@@ -78,6 +78,7 @@ class GameScreen implements Screen {
 	private int score;
 	private int level;
 	private int kills;
+	public float alien_speed;
 	private boolean isPaused = false;
 	private float pauseDuration = 3.0f;
 	private boolean waitingForExplosion = false;
@@ -102,6 +103,9 @@ class GameScreen implements Screen {
 		alien_bullets = new ArrayList<>();
 		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		shapeRenderer = new ShapeRenderer();
+
+		//difficulty setup
+		alien_speed = 0.5f;
 
 		// ui setup
 		lives = 3;
@@ -169,6 +173,20 @@ class GameScreen implements Screen {
 			return;
 		}
 
+		// difficulty enhancer
+		if (kills < 10) {
+			alien_speed = 0.5f;
+		}
+		if (kills >= 10) {
+			alien_speed = 1.0f;
+		}
+		if (kills >= 20) {
+			alien_speed = 1.5f;
+		}
+		if (kills >= 30) {
+			alien_speed = 2.0f;
+		}
+
 		// play next level after killing all enemies in current level
 		if (kills == 55) {
 			kills = 0;
@@ -220,7 +238,7 @@ class GameScreen implements Screen {
 			gameOverState = true;
 		}
 		updateAlienBullets();
-		Alien.moveAliens( aliens, camera);
+		Alien.moveAliens( aliens, camera, alien_speed);
 		checkCollisions();
 		playerCollisions();
 		batch.end();
