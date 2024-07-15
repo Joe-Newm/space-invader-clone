@@ -70,7 +70,9 @@ class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private ShapeRenderer shapeRenderer;
-	private BitmapFont font;
+	private BitmapFont fontBlack;
+	private BitmapFont fontWhite;
+	private BitmapFont fontWhite2;
 	private int lives;
 	private int score;
 	private boolean isPaused = false;
@@ -81,6 +83,8 @@ class GameScreen implements Screen {
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
+
+	public boolean gameOverState = false;
 
 	public final Game game;
 
@@ -112,9 +116,17 @@ class GameScreen implements Screen {
 		// add font
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/C&C Red Alert [INET].ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
 		parameter.size = 38;
 		parameter.color = Color.BLACK;
-		font = generator.generateFont(parameter);
+		fontBlack = generator.generateFont(parameter);
+
+		parameter.size = 100;
+		parameter.color = Color.WHITE;
+		fontWhite = generator.generateFont(parameter);
+		parameter.size = 45;
+		fontWhite2 = generator.generateFont(parameter);
+
 		generator.dispose();
 
 		// set FPS
@@ -128,7 +140,24 @@ class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		if (isPaused) {
-			// Skip game update logic while paused
+			if (gameOverState) {
+				// Display Game Over text
+				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+				shapeRenderer.setColor(Color.DARK_GRAY);
+				shapeRenderer.rect(VIRTUAL_WIDTH / 2 - 220, VIRTUAL_HEIGHT / 2 +65, 450, 160);
+				shapeRenderer.end();
+
+				batch.begin();
+				fontWhite.setColor(Color.WHITE);
+				fontWhite.draw(batch, "GAME OVER", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +200);
+				fontWhite2.draw(batch, "Press ENTER to restart", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +120);
+				batch.end();
+
+				// Check for key press to restart the game
+				if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+					resetGame();
+				}
+			}
 			return;
 		}
 		ScreenUtils.clear(0, 0, 0, 1);
@@ -147,8 +176,9 @@ class GameScreen implements Screen {
 		shapeRenderer.end();
 
 		batch.begin();
-		font.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
-		font.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
+		fontBlack.setColor(Color.BLACK);
+		fontBlack.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
+		fontBlack.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
 
 		player.draw(batch, camera, delta);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
@@ -167,6 +197,12 @@ class GameScreen implements Screen {
 			if (alien.isExplosionFinished()) {
 				iter.remove(); // Remove alien after explosion animation finishes
 			}
+		}
+
+		//test gameover
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			isPaused = true;
+			gameOverState = true;
 		}
 		updateAlienBullets();
 		Alien.moveAliens( aliens, camera);
@@ -240,6 +276,7 @@ class GameScreen implements Screen {
 						public void run() {
 							waitingForExplosion = false;
 							isPaused = true;
+							gameOverState = true;
 						}
 					}, 0.4f);
 				}
@@ -287,12 +324,25 @@ class GameScreen implements Screen {
 	public void hide() {
 	}
 
+	private void resetGame() {
+		gameOverState = false;
+		isPaused = false;
+		lives = 3;
+		score = 0;
+		player.respawn();
+		player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
+		aliens= Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
+		alien_bullets.clear();
+		player_bullets.clear();
+	}
 	@Override
 	public void dispose() {
 		batch.dispose();
 		player_img.dispose();
 		img_bullet.dispose();
 		alien_img.dispose();
+		fontBlack.dispose();
+		fontWhite.dispose();
 	}
 }
 
