@@ -77,6 +77,7 @@ class GameScreen implements Screen {
 	private int lives;
 	private int score;
 	private int level;
+	private int kills;
 	private boolean isPaused = false;
 	private float pauseDuration = 3.0f;
 	private boolean waitingForExplosion = false;
@@ -106,6 +107,7 @@ class GameScreen implements Screen {
 		lives = 3;
 		score = 0;
 		level = 1;
+		kills = 0;
 
 		// death sound during pause
 		deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
@@ -165,6 +167,10 @@ class GameScreen implements Screen {
 				}
 			}
 			return;
+		}
+		if (kills == 55) {
+			kills = 0;
+			nextLevel();
 		}
 		ScreenUtils.clear(0, 0, 0, 1);
 		camera.update();
@@ -240,6 +246,8 @@ class GameScreen implements Screen {
 					alien.triggerExplosion();
 
 					score += 10;
+					kills += 1;
+
 
 					System.out.println("Bullet collided with " + bullet.sprite.getBoundingRectangle());
 					break;
@@ -342,8 +350,24 @@ class GameScreen implements Screen {
 		aliens= Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		alien_bullets.clear();
 		player_bullets.clear();
-
 	}
+
+	private void nextLevel() {
+		deathSound.play(0.1f);
+		Timer.schedule(new Timer.Task() {
+			@Override
+			public void run() {
+
+				isPaused = false;
+				level +=1;
+				player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
+				aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
+				alien_bullets.clear();
+				player_bullets.clear();
+			}
+		}, 3.0f);
+	}
+
 	@Override
 	public void dispose() {
 		batch.dispose();
