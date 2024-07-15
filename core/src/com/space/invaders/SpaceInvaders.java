@@ -73,8 +73,10 @@ class GameScreen implements Screen {
 	private BitmapFont fontBlack;
 	private BitmapFont fontWhite;
 	private BitmapFont fontWhite2;
+	private BitmapFont fontWhite3;
 	private int lives;
 	private int score;
+	private int level;
 	private boolean isPaused = false;
 	private float pauseDuration = 3.0f;
 	private boolean waitingForExplosion = false;
@@ -99,8 +101,11 @@ class GameScreen implements Screen {
 		alien_bullets = new ArrayList<>();
 		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		shapeRenderer = new ShapeRenderer();
+
+		// ui setup
 		lives = 3;
 		score = 0;
+		level = 1;
 
 		// death sound during pause
 		deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
@@ -126,7 +131,8 @@ class GameScreen implements Screen {
 		fontWhite = generator.generateFont(parameter);
 		parameter.size = 45;
 		fontWhite2 = generator.generateFont(parameter);
-
+		parameter.size = 60;
+		fontWhite3 = generator.generateFont(parameter);
 		generator.dispose();
 
 		// set FPS
@@ -165,10 +171,10 @@ class GameScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(Color.LIGHT_GRAY);
-		shapeRenderer.rect(0, VIRTUAL_HEIGHT -40, VIRTUAL_WIDTH, 40);
-		shapeRenderer.end();
+//		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//		shapeRenderer.setColor(Color.LIGHT_GRAY);
+//		shapeRenderer.rect(0, VIRTUAL_HEIGHT -40, VIRTUAL_WIDTH, 40);
+//		shapeRenderer.end();
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(Color.RED);
@@ -177,8 +183,9 @@ class GameScreen implements Screen {
 
 		batch.begin();
 		fontBlack.setColor(Color.BLACK);
-		fontBlack.draw(batch, "LIVES: " + lives, 20, VIRTUAL_HEIGHT -10);
-		fontBlack.draw(batch, "SCORE: " + score, 200, VIRTUAL_HEIGHT -10);
+		fontWhite3.draw(batch, "LIVES: " + lives, 20, 55);
+		fontWhite3.draw(batch, "SCORE: " + score, 20, VIRTUAL_HEIGHT -10);
+		fontWhite3.draw(batch, "LEVEL: " + level, 420, VIRTUAL_HEIGHT-10);
 
 		player.draw(batch, camera, delta);
 		enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
@@ -329,11 +336,13 @@ class GameScreen implements Screen {
 		isPaused = false;
 		lives = 3;
 		score = 0;
+		level = 1;
 		player.respawn();
 		player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
 		aliens= Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		alien_bullets.clear();
 		player_bullets.clear();
+
 	}
 	@Override
 	public void dispose() {
