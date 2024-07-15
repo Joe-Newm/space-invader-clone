@@ -168,6 +168,8 @@ class GameScreen implements Screen {
 			}
 			return;
 		}
+
+		// play next level after killing all enemies in current level
 		if (kills == 55) {
 			kills = 0;
 			nextLevel();
@@ -345,9 +347,10 @@ class GameScreen implements Screen {
 		lives = 3;
 		score = 0;
 		level = 1;
+		kills = 0;
 		player.respawn();
 		player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
-		aliens= Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
+		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		alien_bullets.clear();
 		player_bullets.clear();
 	}

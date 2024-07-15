@@ -65,7 +65,12 @@ public class Alien {
 				float x = startX + col * (alien_width + 10);
 				float y = startY - row * (alien_height + 10);
 
-				aliens.add(new Alien(alien_img, alien_bullets, Color.GREEN, x, y));
+                if (row == 0) {
+                    aliens.add(new Alien(alien_img, alien_bullets, Color.GREEN, x, y));
+                } else if (row == 1 || row == 2) {
+                    aliens.add(new Alien(alien_img, alien_bullets, Color.YELLOW, x, y));
+                } else
+                    aliens.add(new Alien(alien_img, alien_bullets, Color.RED, x, y));
 			}
 		}
         return aliens;
