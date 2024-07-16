@@ -68,7 +68,7 @@ class GameScreen implements Screen {
 	ArrayList<Bullet> player_bullets;
 	ArrayList<Bullet> alien_bullets;
 	float enemy_shoot_delay = 5f;
-	boolean movingRight = true;
+
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private ShapeRenderer shapeRenderer;
@@ -88,6 +88,8 @@ class GameScreen implements Screen {
 	public Sound gameOver;
 	public Sound deathSound;
 	public float shootRate;
+	public int moveCounter;
+	public int moveDelay = 100;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
@@ -181,18 +183,18 @@ class GameScreen implements Screen {
 
 		// difficulty enhancer
 		if (kills < 15) {
-			alien_speed = 0.5f;
+			moveDelay = 80;
 		}
 		if (kills >= 15) {
-			alien_speed = 1.0f;
+			moveDelay = 60;
 			shootRate = 4f;
 		}
 		if (kills >= 30) {
-			alien_speed = 1.5f;
+			moveDelay = 40;
 			shootRate = 3f;
 		}
 		if (kills >= 45) {
-			alien_speed = 2.0f;
+			moveDelay = 20;
 			shootRate = 2f;
 		}
 
@@ -248,10 +250,16 @@ class GameScreen implements Screen {
 			gameOverState = true;
 		}
 		updateAlienBullets();
-		boolean hitBottom = Alien.moveAliens(aliens, camera, alien_speed);
-		if (hitBottom) {
-			isPaused = true;
-			gameOverState = true;
+		// Move aliens only if the counter has reached zero
+		if (moveCounter <= 0) {
+			boolean hitBottom = Alien.moveAliens(aliens, camera);
+			if (hitBottom) {
+				isPaused = true;
+				gameOverState = true;
+			}
+			moveCounter = moveDelay; // Reset the counter
+		} else {
+			moveCounter--; // Decrement the counter
 		}
 		checkCollisions();
 		playerCollisions();

@@ -22,8 +22,9 @@ public class Alien {
     private float stateTime;
     private Animation<TextureRegion> explosionAnimation;
     private static final float SCALE = 8f;
+    public static int ticks;
 
-    public static boolean movingRight = true;
+    public static boolean movingRight;
 
     public Alien(Texture img, ArrayList<Bullet> bullets, Color color, float startX, float startY) {
         sprite = new Sprite(img);
@@ -33,6 +34,8 @@ public class Alien {
         bulletTexture = new Texture("bullet.png");
         this.bullets = bullets;
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sound/shoot-sound.wav"));
+        ticks = 0;
+        movingRight = true;
 
         //create animation for explosion
         Texture explosionSheet = new Texture(Gdx.files.internal("explode.png"));
@@ -57,7 +60,7 @@ public class Alien {
         ArrayList<Alien> aliens = new ArrayList<>();
         float alien_width = alien_img.getWidth() * 9;
 		float alien_height = alien_img.getHeight() * 10;
-		float startX = (float) VIRTUAL_WIDTH / 5.5f;
+		float startX = (float) VIRTUAL_WIDTH / 30f;
 		float startY = (float) VIRTUAL_HEIGHT - 110;
 
         for (int row = 0; row < 5; row++) {
@@ -88,38 +91,42 @@ public class Alien {
         return explosionAnimation.isAnimationFinished(stateTime);
     }
 
-    public static boolean moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera,float speed) {
-        boolean hitEdge = false;
+    public static boolean moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera) {
         boolean hitBottom = false;
-        float screenWidth = camera.viewportWidth;
-        for (Alien alien : aliens) {
 
-            if (movingRight) {
-                alien.position.x += speed;
-            } else {
-                alien.position.x -= speed;
-            }
-            // check for hitEdge
-            if (alien.position.x >= screenWidth - alien.sprite.getWidth() * 7 || alien.position.x <= 0 + alien.sprite.getWidth() * 7) {
-                hitEdge = true;
-            }
-            // check for hitting the bottom
-            if (alien.position.y < 200 && alien.position.x > 1100) {
-                hitBottom = true;
-                System.out.println(hitBottom);
-                hitBottom = true;
-            }
-        }
-        if (hitEdge) {
-            movingRight = !movingRight;
+        float screenWidth = camera.viewportWidth;
+
+        // Check if any alien hits the edge
+        if (ticks == 12) {
             for (Alien alien : aliens) {
-                alien.position.y -= 40;
+                    alien.position.y -= 40;
+                }
+            movingRight = !movingRight;
+            ticks = 0;
+        }else {
+            // Move aliens horizontally
+            for (Alien alien : aliens) {
+                if (movingRight) {
+                    alien.position.x += 30;
+
+                } else {
+                    alien.position.x -= 30;
+                }
+                if (alien.position.y < 200) {
+                    hitBottom = true;
+                }
             }
         }
+        ticks += 1;
+
+        System.out.println(ticks);
+
         return hitBottom;
     }
 
+
     public void draw(SpriteBatch batch, float delta) {
+
         if (exploding) {
             stateTime += delta;
             TextureRegion currentFrame = explosionAnimation.getKeyFrame(stateTime, false);
