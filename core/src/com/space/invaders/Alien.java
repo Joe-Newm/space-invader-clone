@@ -88,10 +88,10 @@ public class Alien {
         return explosionAnimation.isAnimationFinished(stateTime);
     }
 
-    public static void moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera,float speed) {
+    public static boolean moveAliens(ArrayList<Alien> aliens, OrthographicCamera camera,float speed) {
         boolean hitEdge = false;
+        boolean hitBottom = false;
         float screenWidth = camera.viewportWidth;
-
         for (Alien alien : aliens) {
 
             if (movingRight) {
@@ -100,8 +100,14 @@ public class Alien {
                 alien.position.x -= speed;
             }
             // check for hitEdge
-            if (alien.position.x >= screenWidth - alien.sprite.getWidth()*7 || alien.position.x <= 0 + alien.sprite.getWidth()*7) {
+            if (alien.position.x >= screenWidth - alien.sprite.getWidth() * 7 || alien.position.x <= 0 + alien.sprite.getWidth() * 7) {
                 hitEdge = true;
+            }
+            // check for hitting the bottom
+            if (alien.position.y < 200) {
+                hitBottom = true;
+                System.out.println(hitBottom);
+                hitBottom = true;
             }
         }
         if (hitEdge) {
@@ -110,6 +116,7 @@ public class Alien {
                 alien.position.y -= 40;
             }
         }
+        return hitBottom;
     }
 
     public void draw(SpriteBatch batch, float delta) {

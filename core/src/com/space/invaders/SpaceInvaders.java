@@ -19,6 +19,7 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 import static com.badlogic.gdx.math.MathUtils.random;
 
 public class SpaceInvaders extends Game {
@@ -86,6 +87,8 @@ class GameScreen implements Screen {
 	public Sound victorySound;
 	public Sound gameOver;
 	public Sound deathSound;
+	public float shootRate;
+	public boolean result = false;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;
@@ -105,6 +108,7 @@ class GameScreen implements Screen {
 		alien_bullets = new ArrayList<>();
 		aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
 		shapeRenderer = new ShapeRenderer();
+		shootRate = 5f;
 
 		//difficulty setup
 		alien_speed = 0.5f;
@@ -182,12 +186,15 @@ class GameScreen implements Screen {
 		}
 		if (kills >= 15) {
 			alien_speed = 1.0f;
+			shootRate = 4f;
 		}
 		if (kills >= 30) {
 			alien_speed = 1.5f;
+			shootRate = 3f;
 		}
 		if (kills >= 45) {
 			alien_speed = 2.0f;
+			shootRate = 2f;
 		}
 
 		// play next level after killing all enemies in current level
@@ -222,7 +229,7 @@ class GameScreen implements Screen {
 
 		// check if time for alien to shoot
 		if (enemy_shoot_delay <= 0 && !aliens.isEmpty()) {
-			enemy_shoot_delay = MathUtils.random(1f, 5f);
+			enemy_shoot_delay = MathUtils.random(1f, shootRate);
 			int randomIndex = random.nextInt(aliens.size());
 			Alien randomAlien = aliens.get(randomIndex);
 			randomAlien.shoot();
@@ -242,7 +249,11 @@ class GameScreen implements Screen {
 			gameOverState = true;
 		}
 		updateAlienBullets();
-		Alien.moveAliens( aliens, camera, alien_speed);
+		boolean hitBottom = Alien.moveAliens(aliens, camera, alien_speed);
+		if (hitBottom) {
+			isPaused = true;
+			gameOverState = true;
+		}
 		checkCollisions();
 		playerCollisions();
 		batch.end();
