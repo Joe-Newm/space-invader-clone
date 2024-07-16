@@ -88,7 +88,6 @@ class GameScreen implements Screen {
 	public Sound gameOver;
 	public Sound deathSound;
 	public float shootRate;
-	public boolean result = false;
 
 	private final float VIRTUAL_WIDTH = 1200;
 	private final float VIRTUAL_HEIGHT = 1000;

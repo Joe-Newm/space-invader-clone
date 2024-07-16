@@ -104,7 +104,7 @@ public class Alien {
                 hitEdge = true;
             }
             // check for hitting the bottom
-            if (alien.position.y < 200) {
+            if (alien.position.y < 200 && alien.position.x > 1100) {
                 hitBottom = true;
                 System.out.println(hitBottom);
                 hitBottom = true;
