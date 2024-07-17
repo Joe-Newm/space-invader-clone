@@ -16,4 +16,19 @@ robovm {
 	archs = "arm64"
 }
 
+tasks.register("dist") {
+	dependsOn "package"
+	doLast {
+		println "iOS package is ready for distribution!"
+	}
+}
+
+tasks.register("package", Exec) {
+	dependsOn "build"
+	commandLine 'xcrun', 'xcodebuild', '-project', 'ios/ios.xcodeproj', '-scheme', 'ios', '-configuration', 'Release', '-sdk', 'iphoneos', 'archive', '-archivePath', 'ios/build/ios.xcarchive'
+	doLast {
+		println "iOS package created."
+	}
+}
+
 eclipse.project.name = appName + "-ios"

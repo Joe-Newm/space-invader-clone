@@ -424,4 +424,3 @@ class GameScreen implements Screen {
 		fontWhite.dispose();
 	}
 }
-
