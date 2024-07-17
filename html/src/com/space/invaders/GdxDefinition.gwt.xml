@@ -1,32 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "https://www.gwtproject.org/doctype/2.10.0/gwt-module.dtd">
 <module rename-to="html">
-	<!-- Inherit the core GWT module -->
-	<inherits name='com.google.gwt.user.User' />
-
-	<!-- Inherit the required LibGDX modules -->
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+<!--	<inherits name="com.badlogic.gdx.graphics.g2d.freetype.freetype-gwt" />-->
+	<inherits name='com.badlogic.gdx.controllers' />
 	<inherits name='com.badlogic.gdx.controllers.controllers-gwt' />
 	<inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
 	<inherits name='com.badlogic.gdx.ai' />
 	<inherits name='com.badlogic.ashley_gwt' />
 	<inherits name='Box2DLights' />
 
-	<!-- Entry point class -->
+	<inherits name='TutorialGame' />
 	<entry-point class='com.space.invaders.client.HtmlLauncher' />
-
-	<!-- Enable cross-site requests -->
-	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE' />
-
-	<!-- Asset path configuration -->
+	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../assets" />
-
-	<!-- Specify the user agents you want to compile for -->
-	<set-property name="user.agent" value="gecko1_8,safari" />
+	<set-property name="user.agent" value="gecko1_8, safari"/>
 	<collapse-property name="user.agent" values="*" />
-
-	<!-- Specify source paths for the GWT compiler -->
-	<source path="client" />
-	<source path="shared" />
-	<source path="../core/src" />
 </module>

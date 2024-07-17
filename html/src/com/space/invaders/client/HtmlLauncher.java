@@ -19,4 +19,15 @@ public class HtmlLauncher extends GwtApplication {
         public ApplicationListener createApplicationListener () {
                 return new SpaceInvaders();
         }
+
+//        @Override
+//        public void onModuleLoad () {
+//                FreetypeInjector.inject(new OnCompletion() {
+//                        public void run () {
+//                                // Replace HtmlLauncher with the class name
+//                                // If your class is called FooBar.java than the line should be FooBar.super.onModuleLoad();
+//                                HtmlLauncher.super.onModuleLoad();
+//                        }
+//                });
+//        }
 }
