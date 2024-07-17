@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "https://www.gwtproject.org/doctype/2.10.0/gwt-module.dtd">
+<module rename-to="html">
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name="com.google.gwt.user.User"/>
+
+	<!-- Inherit the default GWT style sheet. -->
+	<inherits name="com.google.gwt.user.theme.clean.Clean"/>
+
+	<!-- Specify the entry point class -->
+	<entry-point class="com.space.invaders.client.HtmlLauncher"/>
+
+	<!-- Include the source path for your project -->
+	<source path="client"/>
+	<source path="shared"/>
+</module>

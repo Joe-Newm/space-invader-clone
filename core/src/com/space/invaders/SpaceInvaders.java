@@ -87,6 +87,7 @@ class GameScreen implements Screen {
 	public Sound victorySound;
 	public Sound gameOver;
 	public Sound deathSound;
+	public Sound explodeSound;
 	public float shootRate;
 	public int moveCounter;
 	public int moveDelay = 100;
@@ -124,6 +125,7 @@ class GameScreen implements Screen {
 		victorySound = Gdx.audio.newSound(Gdx.files.internal("sound/703542__yoshicakes77__dead.ogg"));
 		gameOver = Gdx.audio.newSound(Gdx.files.internal("sound/game-over.wav"));
 		deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
+		explodeSound = Gdx.audio.newSound(Gdx.files.internal("sound/explode.wav"));
 
 		// add camera
 		camera = new OrthographicCamera();
@@ -289,6 +291,7 @@ class GameScreen implements Screen {
 
 					score += 10;
 					kills += 1;
+					explodeSound.play(0.1f);
 
 
 					System.out.println("Bullet collided with " + bullet.sprite.getBoundingRectangle());

@@ -44,6 +44,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java-library"
+    apply plugin: "java"
 
 
     dependencies {
@@ -79,6 +80,7 @@ project(":html") {
     apply plugin: "gwt"
     apply plugin: "war"
     apply plugin: "org.gretty"
+
 
 
     dependencies {

@@ -3,7 +3,7 @@ package com.space.invaders.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.space.invaders.SpaceInvaders;
+import com.space.invaders.*;
 
 public class HtmlLauncher extends GwtApplication {
 
