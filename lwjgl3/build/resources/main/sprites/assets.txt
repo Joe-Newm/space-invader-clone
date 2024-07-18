@@ -1,0 +1,17 @@
+alien.png
+badlogic.jpg
+bullet.png
+explode.png
+fonts/C&C Red Alert [INET].ttf
+fonts/Pixellari.ttf
+libgdx.png
+player.png
+sound/350987__cabled_mess__lose_c_05.wav
+sound/362375__shapingwaves__sw001_8-bit-games_music_element_fail_01_arp.wav
+sound/515005__matrixxx__retro-space-explosion-or-death-sound-effect.wav
+sound/518307__mrthenoronha__death-song-8-bit.wav
+sound/703542__yoshicakes77__dead.ogg
+sound/explode.wav
+sound/game-over.wav
+sound/shoot-sound.wav
+working-files/Sprite-0001.aseprite
