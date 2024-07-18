@@ -72,7 +72,6 @@ class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
     private ShapeRenderer shapeRenderer;
-    private BitmapFont fontBlack;
     private BitmapFont fontWhite;
     private BitmapFont fontWhite2;
     private BitmapFont fontWhite3;
@@ -135,21 +134,8 @@ class GameScreen implements Screen {
         camera.update();
 
         // add font
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/C&C Red Alert [INET].ttf"));
-//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-//
-//        parameter.size = 38;
-//        parameter.color = Color.BLACK;
-//        fontBlack = generator.generateFont(parameter);
-//
-//        parameter.size = 100;
-//        parameter.color = Color.WHITE;
-//        fontWhite = generator.generateFont(parameter);
-//        parameter.size = 45;
-//        fontWhite2 = generator.generateFont(parameter);
-//        parameter.size = 60;
-//        fontWhite3 = generator.generateFont(parameter);
-//        generator.dispose();
+        fontWhite3 = new BitmapFont(Gdx.files.internal("fonts/munro.fnt"));
+        fontWhite = new BitmapFont(Gdx.files.internal("fonts/munro.fnt"));
 
         // set FPS
         Gdx.graphics.setForegroundFPS(60);
@@ -169,11 +155,13 @@ class GameScreen implements Screen {
                 shapeRenderer.rect(VIRTUAL_WIDTH / 2 - 220, VIRTUAL_HEIGHT / 2 +65, 450, 160);
                 shapeRenderer.end();
 
-//                batch.begin();
-//                fontWhite.setColor(Color.WHITE);
-//                fontWhite.draw(batch, "GAME OVER", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +200);
-//                fontWhite2.draw(batch, "Press ENTER to restart", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +120);
-//                batch.end();
+                batch.begin();
+                fontWhite.setColor(Color.WHITE);
+                fontWhite.getData().setScale(1.65f);
+                fontWhite.draw(batch, "GAME OVER", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +200);
+                fontWhite.getData().setScale(0.755f);
+                fontWhite.draw(batch, "Press ENTER to restart", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +120);
+                batch.end();
 
                 // Check for key press to restart the game
                 if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
@@ -211,21 +199,15 @@ class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-//		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//		shapeRenderer.setColor(Color.LIGHT_GRAY);
-//		shapeRenderer.rect(0, VIRTUAL_HEIGHT -40, VIRTUAL_WIDTH, 40);
-//		shapeRenderer.end();
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(0, 75, VIRTUAL_WIDTH, 4);
         shapeRenderer.end();
 
         batch.begin();
-//        fontBlack.setColor(Color.BLACK);
-//        fontWhite3.draw(batch, "LIVES: " + lives, 20, 55);
-//        fontWhite3.draw(batch, "SCORE: " + score, 20, VIRTUAL_HEIGHT -10);
-//        fontWhite3.draw(batch, "LEVEL: " + level, 420, VIRTUAL_HEIGHT-10);
+        fontWhite3.draw(batch, "LIVES: " + lives, 20, 55);
+        fontWhite3.draw(batch, "SCORE: " + score, 20, VIRTUAL_HEIGHT -10);
+        fontWhite3.draw(batch, "LEVEL: " + level, 420, VIRTUAL_HEIGHT-10);
 
         player.draw(batch, camera, delta);
         enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
@@ -420,7 +402,7 @@ class GameScreen implements Screen {
         player_img.dispose();
         img_bullet.dispose();
         alien_img.dispose();
-//        fontBlack.dispose();
-//        fontWhite.dispose();
+        fontWhite3.dispose();
+        fontWhite.dispose();
     }
 }

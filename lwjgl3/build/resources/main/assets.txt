@@ -1,4 +1,6 @@
 fonts/C&C Red Alert [INET].ttf
+fonts/munro.fnt
+fonts/munro.png
 fonts/Pixellari.ttf
 sound/350987__cabled_mess__lose_c_05.wav
 sound/362375__shapingwaves__sw001_8-bit-games_music_element_fail_01_arp.wav

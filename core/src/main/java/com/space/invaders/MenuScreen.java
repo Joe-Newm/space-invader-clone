@@ -39,6 +39,8 @@ public class MenuScreen implements Screen {
 //        parameter.color = Color.WHITE;
 //        font = generator.generateFont(parameter);
 //        generator.dispose();
+        font = new BitmapFont(Gdx.files.internal("fonts/munro.fnt"));
+        font.setColor(Color.WHITE);
 
         camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
         camera.update();
@@ -57,13 +59,13 @@ public class MenuScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-//        batch.begin();
-//        font.setColor(Color.WHITE);
-//        font.draw(batch, "SPACE INVADERS CLONE\n    by Joseph Newman", VIRTUAL_WIDTH /3 - 20, VIRTUAL_HEIGHT - 400);
-//
-//        font.setColor(Color.GREEN);
-//        font.draw(batch, "click to begin", VIRTUAL_WIDTH -700, VIRTUAL_HEIGHT - 600);
-//        batch.end();
+        batch.begin();
+        font.setColor(Color.WHITE);
+        font.draw(batch, "SPACE INVADERS CLONE\n  by Joseph Newman", VIRTUAL_WIDTH /3 - 50, VIRTUAL_HEIGHT - 400);
+
+        font.setColor(Color.GREEN);
+        font.draw(batch, "click to begin", VIRTUAL_WIDTH -760, VIRTUAL_HEIGHT - 600);
+        batch.end();
 
         if (Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             ((SpaceInvaders) game).startGame();
