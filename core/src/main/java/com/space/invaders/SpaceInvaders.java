@@ -112,7 +112,7 @@ class GameScreen implements Screen {
         alien_img = new Texture("sprites/alien.png");
         barrier_img = new Texture("sprites/square.png");
         barrier = new Sprite(barrier_img);
-        player = new Player(player_img, img_bullet, Color.GREEN);
+        player = new Player(player_img, img_bullet);
         player_bullets = player.bullets;
         barriers = new ArrayList<>();
         alien_bullets = new ArrayList<>();
@@ -244,7 +244,7 @@ class GameScreen implements Screen {
 
         // ui
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.setColor(248 / 255f, 59 / 255f, 58 / 255f, 255 / 255f);
         shapeRenderer.rect(0, 75, VIRTUAL_WIDTH, 4);
         shapeRenderer.end();
 
@@ -308,7 +308,7 @@ class GameScreen implements Screen {
                 startX -= (barrier.getWidth() * 10) * 20;
                 for (int col = 0; col < 10; col++) {
                     barrier = new Sprite(barrier_img);
-                    barrier.setColor(Color.CYAN);
+                    barrier.setColor(Color.SALMON);
                     barrier.setPosition(startX, startY);
                     barrier.setScale(20);
                     barriers.add(barrier);
