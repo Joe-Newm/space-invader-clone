@@ -235,6 +235,7 @@ class GameScreen implements Screen {
         }
         updateAlienBullets();
         // Move aliens only if the counter has reached zero
+        moveCounter -= delta;
         if (moveCounter <= 0) {
             boolean hitBottom = Alien.moveAliens(aliens, camera);
             if (hitBottom) {
@@ -242,8 +243,6 @@ class GameScreen implements Screen {
                 gameOverState = true;
             }
             moveCounter = moveDelay; // Reset the counter
-        } else {
-            moveCounter--; // Decrement the counter
         }
         checkCollisions();
         playerCollisions();

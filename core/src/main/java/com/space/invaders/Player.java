@@ -62,7 +62,7 @@ public class Player {
         if(Gdx.input.isKeyPressed(Keys.RIGHT)){
             position.x += deltaTime * speed;
         }
-        if(Gdx.input.isKeyPressed(Keys.SPACE) && bullet_delay < 0 && bullets.isEmpty()){
+        if(Gdx.input.isKeyJustPressed(Keys.SPACE) && bullet_delay < 0 && bullets.isEmpty()){
             bullets.add(new Bullet(bulletTexture, position.x + 3, position.y, 5));
             bullet_delay = 20;
             shootSound.play(0.1f);
@@ -112,7 +112,7 @@ public class Player {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            bullet.player_update(3);
+            bullet.player_update(delta * 170);
             // remove bullets off the screen
             if (bullet.position.y > camera.viewportHeight) {
                 iterator.remove();
