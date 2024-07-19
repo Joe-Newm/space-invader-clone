@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class Player {
     public Vector2 position;
     public Sprite sprite;
-    public float speed = 2.5f;
+    public float speed = 500f;
     public ArrayList<Bullet> bullets;
     public Texture bulletTexture;
     public float bullet_delay = 20;
@@ -92,7 +92,7 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch, OrthographicCamera camera, float delta) {
-        update(3);
+        update(delta);
 
         // draw all bullets
         for (Bullet bullet : bullets) {

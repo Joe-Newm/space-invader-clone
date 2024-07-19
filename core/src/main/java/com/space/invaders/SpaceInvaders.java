@@ -1,34 +1,35 @@
 package com.space.invaders;
 
+import static com.badlogic.gdx.math.MathUtils.random;
+
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 //import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.audio.Sound;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-import static com.badlogic.gdx.math.MathUtils.random;
-
 public class SpaceInvaders extends Game {
+
     private boolean isFullScreenToggled = false;
 
     @Override
     public void create() {
         setScreen(new MenuScreen(this));
     }
+
     @Override
     public void render() {
         super.render();
@@ -48,7 +49,8 @@ public class SpaceInvaders extends Game {
                 if (Gdx.graphics.isFullscreen()) {
                     Gdx.graphics.setWindowedMode(800, 600);
                 } else {
-                    Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+                    Graphics.DisplayMode displayMode =
+                        Gdx.graphics.getDisplayMode();
                     Gdx.graphics.setFullscreenMode(displayMode);
                 }
             }
@@ -59,14 +61,18 @@ public class SpaceInvaders extends Game {
 }
 
 class GameScreen implements Screen {
+
     SpriteBatch batch;
     Texture player_img;
     Player player;
     Texture img_bullet;
     Texture alien_img;
+    Texture barrier_img;
+    public Sprite barrier;
     ArrayList<Alien> aliens;
     ArrayList<Bullet> player_bullets;
     ArrayList<Bullet> alien_bullets;
+    ArrayList<Sprite> barriers;
     float enemy_shoot_delay = 5f;
 
     private OrthographicCamera camera;
@@ -88,8 +94,8 @@ class GameScreen implements Screen {
     public Sound deathSound;
     public Sound explodeSound;
     public float shootRate;
-    public int moveCounter;
-    public int moveDelay = 100;
+    public float moveCounter;
+    public float moveDelay = 1;
 
     private final float VIRTUAL_WIDTH = 1200;
     private final float VIRTUAL_HEIGHT = 1000;
@@ -104,10 +110,19 @@ class GameScreen implements Screen {
         player_img = new Texture("sprites/player.png");
         img_bullet = new Texture("sprites/bullet.png");
         alien_img = new Texture("sprites/alien.png");
+        barrier_img = new Texture("sprites/square.png");
+        barrier = new Sprite(barrier_img);
         player = new Player(player_img, img_bullet, Color.GREEN);
         player_bullets = player.bullets;
+        barriers = new ArrayList<>();
         alien_bullets = new ArrayList<>();
-        aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
+        aliens = Alien.createAliens(
+            alien_img,
+            VIRTUAL_WIDTH,
+            VIRTUAL_HEIGHT,
+            alien_bullets
+        );
+        addBarrier();
         shapeRenderer = new ShapeRenderer();
         shootRate = 5f;
 
@@ -121,16 +136,30 @@ class GameScreen implements Screen {
         kills = 0;
 
         // death sound during pause
-        victorySound = Gdx.audio.newSound(Gdx.files.internal("sound/703542__yoshicakes77__dead.ogg"));
-        gameOver = Gdx.audio.newSound(Gdx.files.internal("sound/game-over.wav"));
-        deathSound = Gdx.audio.newSound(Gdx.files.internal("sound/518307__mrthenoronha__death-song-8-bit.wav"));
-        explodeSound = Gdx.audio.newSound(Gdx.files.internal("sound/explode.wav"));
+        victorySound = Gdx.audio.newSound(
+            Gdx.files.internal("sound/703542__yoshicakes77__dead.ogg")
+        );
+        gameOver = Gdx.audio.newSound(
+            Gdx.files.internal("sound/game-over.wav")
+        );
+        deathSound = Gdx.audio.newSound(
+            Gdx.files.internal(
+                "sound/518307__mrthenoronha__death-song-8-bit.wav"
+            )
+        );
+        explodeSound = Gdx.audio.newSound(
+            Gdx.files.internal("sound/explode.wav")
+        );
 
         // add camera
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply();
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.position.set(
+            camera.viewportWidth / 2,
+            camera.viewportHeight / 2,
+            0
+        );
         camera.update();
 
         // add font
@@ -142,8 +171,7 @@ class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
     public void render(float delta) {
@@ -152,15 +180,30 @@ class GameScreen implements Screen {
                 // Display Game Over text
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.DARK_GRAY);
-                shapeRenderer.rect(VIRTUAL_WIDTH / 2 - 220, VIRTUAL_HEIGHT / 2 +65, 450, 160);
+                shapeRenderer.rect(
+                    VIRTUAL_WIDTH / 2 - 220,
+                    VIRTUAL_HEIGHT / 2 + 65,
+                    450,
+                    160
+                );
                 shapeRenderer.end();
 
                 batch.begin();
                 fontWhite.setColor(Color.WHITE);
                 fontWhite.getData().setScale(1.65f);
-                fontWhite.draw(batch, "GAME OVER", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +200);
+                fontWhite.draw(
+                    batch,
+                    "GAME OVER",
+                    VIRTUAL_WIDTH / 2 - 200,
+                    VIRTUAL_HEIGHT / 2 + 200
+                );
                 fontWhite.getData().setScale(0.755f);
-                fontWhite.draw(batch, "Press ENTER to restart", VIRTUAL_WIDTH / 2 - 200, VIRTUAL_HEIGHT / 2 +120);
+                fontWhite.draw(
+                    batch,
+                    "Press ENTER to restart",
+                    VIRTUAL_WIDTH / 2 - 200,
+                    VIRTUAL_HEIGHT / 2 + 120
+                );
                 batch.end();
 
                 // Check for key press to restart the game
@@ -173,18 +216,18 @@ class GameScreen implements Screen {
 
         // difficulty enhancer
         if (kills < 15) {
-            moveDelay = 80;
+            moveDelay = 0.8f;
         }
         if (kills >= 15) {
-            moveDelay = 60;
+            moveDelay = 0.6f;
             shootRate = 4f;
         }
         if (kills >= 30) {
-            moveDelay = 40;
+            moveDelay = 0.4f;
             shootRate = 3f;
         }
         if (kills >= 45) {
-            moveDelay = 20;
+            moveDelay = 0.2f;
             shootRate = 2f;
         }
 
@@ -199,6 +242,7 @@ class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+        // ui
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(0, 75, VIRTUAL_WIDTH, 4);
@@ -206,8 +250,8 @@ class GameScreen implements Screen {
 
         batch.begin();
         fontWhite3.draw(batch, "LIVES: " + lives, 20, 55);
-        fontWhite3.draw(batch, "SCORE: " + score, 20, VIRTUAL_HEIGHT -10);
-        fontWhite3.draw(batch, "LEVEL: " + level, 420, VIRTUAL_HEIGHT-10);
+        fontWhite3.draw(batch, "SCORE: " + score, 20, VIRTUAL_HEIGHT - 10);
+        fontWhite3.draw(batch, "LEVEL: " + level, 420, VIRTUAL_HEIGHT - 10);
 
         player.draw(batch, camera, delta);
         enemy_shoot_delay -= Gdx.graphics.getDeltaTime();
@@ -220,7 +264,12 @@ class GameScreen implements Screen {
             randomAlien.shoot();
         }
 
-        for (Iterator<Alien> iter = aliens.iterator(); iter.hasNext(); ) {
+        // draw barriers
+        for (Sprite barrier : barriers) {
+            barrier.draw(batch);
+        }
+
+        for (Iterator<Alien> iter = aliens.iterator(); iter.hasNext();) {
             Alien alien = iter.next();
             alien.draw(batch, delta); // Pass delta time to the draw method
             if (alien.isExplosionFinished()) {
@@ -244,9 +293,75 @@ class GameScreen implements Screen {
             }
             moveCounter = moveDelay; // Reset the counter
         }
+        barrierCollisions();
         checkCollisions();
         playerCollisions();
         batch.end();
+    }
+
+    public void addBarrier() {
+        int startY = 220;
+        int startX = 300;
+        for (int block = 0; block < 3; block++) {
+            startY = 250;
+            for (int row = 0; row < 4; row++) {
+                startX -= (barrier.getWidth() * 10) * 20;
+                for (int col = 0; col < 10; col++) {
+                    barrier = new Sprite(barrier_img);
+                    barrier.setColor(Color.CYAN);
+                    barrier.setPosition(startX, startY);
+                    barrier.setScale(20);
+                    barriers.add(barrier);
+                    startX += barrier.getWidth() * 20;
+                }
+                startY += barrier.getHeight() * 20;
+            }
+            startX += 420;
+        }
+    }
+
+    public void barrierCollisions() {
+        ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+        ArrayList<Alien> aliensToRemove = new ArrayList<>();
+        ArrayList<Sprite> barriersToRemove = new ArrayList<>();
+        for (Bullet bullet : player_bullets) {
+            for (Sprite barrier : barriers) {
+                if (
+                    bullet.sprite
+                        .getBoundingRectangle()
+                        .overlaps(barrier.getBoundingRectangle())
+                ) {
+                    bulletsToRemove.add(bullet);
+                    barriersToRemove.add(barrier);
+                }
+            }
+        }
+        for (Bullet bullet : alien_bullets) {
+            for (Sprite barrier : barriers) {
+                if (
+                    bullet.sprite
+                        .getBoundingRectangle()
+                        .overlaps(barrier.getBoundingRectangle())
+                ) {
+                    bulletsToRemove.add(bullet);
+                    barriersToRemove.add(barrier);
+                }
+            }
+        }
+        for (Alien alien : aliens) {
+            for (Sprite barrier : barriers) {
+                if (
+                    alien.sprite
+                        .getBoundingRectangle()
+                        .overlaps(barrier.getBoundingRectangle())
+                ) {
+                    barriersToRemove.add(barrier);
+                }
+            }
+        }
+        alien_bullets.removeAll(bulletsToRemove);
+        player_bullets.removeAll(bulletsToRemove);
+        barriers.removeAll(barriersToRemove);
     }
 
     public void updateAlienBullets() {
@@ -266,7 +381,11 @@ class GameScreen implements Screen {
         ArrayList<Alien> aliensToRemove = new ArrayList<>();
         for (Bullet bullet : player_bullets) {
             for (Alien alien : aliens) {
-                if (bullet.sprite.getBoundingRectangle().overlaps(alien.sprite.getBoundingRectangle())) {
+                if (
+                    bullet.sprite
+                        .getBoundingRectangle()
+                        .overlaps(alien.sprite.getBoundingRectangle())
+                ) {
                     bulletsToRemove.add(bullet);
                     alien.triggerExplosion();
 
@@ -274,8 +393,10 @@ class GameScreen implements Screen {
                     kills += 1;
                     explodeSound.play(0.1f);
 
-
-                    System.out.println("Bullet collided with " + bullet.sprite.getBoundingRectangle());
+                    System.out.println(
+                        "Bullet collided with " +
+                        bullet.sprite.getBoundingRectangle()
+                    );
                     break;
                 }
             }
@@ -287,39 +408,61 @@ class GameScreen implements Screen {
         ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
 
         for (Bullet bullet : alien_bullets) {
-            if (bullet.sprite.getBoundingRectangle().overlaps(player.sprite.getBoundingRectangle())) {
+            if (
+                bullet.sprite
+                    .getBoundingRectangle()
+                    .overlaps(player.sprite.getBoundingRectangle())
+            ) {
                 bulletsToRemove.add(bullet);
                 player.triggerExplosion();
-                System.out.println("Bullet collided with the player" + bullet.sprite.getBoundingRectangle());
+                System.out.println(
+                    "Bullet collided with the player" +
+                    bullet.sprite.getBoundingRectangle()
+                );
                 if (lives > 0 && !waitingForExplosion) {
                     lives -= 1;
                     waitingForExplosion = true;
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            waitingForExplosion = false;
-                            pauseGameForDuration(2.0f);
-                            deathSound.play(0.1f);
-                            Timer.schedule(new Timer.Task(){
-                                @Override
-                                public void run() {
-                                    player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
-                                    player.respawn();
-                                }
-                            },1.0f);
-                        }
-                    }, 0.25f); // Pause after explosion animation
+                    Timer.schedule(
+                        new Timer.Task() {
+                            @Override
+                            public void run() {
+                                waitingForExplosion = false;
+                                pauseGameForDuration(2.0f);
+                                deathSound.play(0.2f);
+                                Timer.schedule(
+                                    new Timer.Task() {
+                                        @Override
+                                        public void run() {
+                                            player.position = new Vector2(
+                                                player.sprite.getWidth() * 7,
+                                                (player.sprite.getScaleY() *
+                                                        player.sprite.getHeight()) /
+                                                    2 +
+                                                100
+                                            );
+                                            player.respawn();
+                                        }
+                                    },
+                                    1.0f
+                                );
+                            }
+                        },
+                        0.25f
+                    ); // Pause after explosion animation
                 } else {
                     gameOver.play(0.1f);
                     player.triggerExplosion();
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            waitingForExplosion = false;
-                            isPaused = true;
-                            gameOverState = true;
-                        }
-                    }, 0.4f);
+                    Timer.schedule(
+                        new Timer.Task() {
+                            @Override
+                            public void run() {
+                                waitingForExplosion = false;
+                                isPaused = true;
+                                gameOverState = true;
+                            }
+                        },
+                        0.4f
+                    );
                 }
             }
         }
@@ -329,19 +472,29 @@ class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.position.set(
+            camera.viewportWidth / 2,
+            camera.viewportHeight / 2,
+            0
+        );
         camera.update();
     }
 
     private void pauseGame() {
-        Gdx.app.log("MyGame", "Game is pausing for " + pauseDuration + " seconds");
+        Gdx.app.log(
+            "MyGame",
+            "Game is pausing for " + pauseDuration + " seconds"
+        );
         isPaused = true;
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                resumeGame();
-            }
-        }, pauseDuration);
+        Timer.schedule(
+            new Timer.Task() {
+                @Override
+                public void run() {
+                    resumeGame();
+                }
+            },
+            pauseDuration
+        );
     }
 
     private void resumeGame() {
@@ -354,16 +507,13 @@ class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     private void resetGame() {
         gameOverState = false;
@@ -373,26 +523,51 @@ class GameScreen implements Screen {
         level = 1;
         kills = 0;
         player.respawn();
-        player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
-        aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
+        player.position = new Vector2(
+            player.sprite.getWidth() * 7,
+            (player.sprite.getScaleY() * player.sprite.getHeight()) / 2 + 100
+        );
+        aliens = Alien.createAliens(
+            alien_img,
+            VIRTUAL_WIDTH,
+            VIRTUAL_HEIGHT,
+            alien_bullets
+        );
         alien_bullets.clear();
         player_bullets.clear();
+        barriers.clear();
+        addBarrier();
     }
 
     private void nextLevel() {
-        victorySound.play(0.1f);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-
-                isPaused = false;
-                level +=1;
-                player.position =  new Vector2(player.sprite.getWidth()*7,player.sprite.getScaleY()*player.sprite.getHeight()/2 + 100);
-                aliens = Alien.createAliens(alien_img, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, alien_bullets);
-                alien_bullets.clear();
-                player_bullets.clear();
-            }
-        }, 3.0f);
+        victorySound.play(0.3f);
+        Timer.schedule(
+            new Timer.Task() {
+                @Override
+                public void run() {
+                    isPaused = false;
+                    level += 1;
+                    player.position = new Vector2(
+                        player.sprite.getWidth() * 7,
+                        (player.sprite.getScaleY() *
+                                player.sprite.getHeight()) /
+                            2 +
+                        100
+                    );
+                    aliens = Alien.createAliens(
+                        alien_img,
+                        VIRTUAL_WIDTH,
+                        VIRTUAL_HEIGHT,
+                        alien_bullets
+                    );
+                    alien_bullets.clear();
+                    player_bullets.clear();
+                    barriers.clear();
+                    addBarrier();
+                }
+            },
+            3.0f
+        );
     }
 
     @Override
