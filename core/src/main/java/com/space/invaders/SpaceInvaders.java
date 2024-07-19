@@ -126,7 +126,7 @@ class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         shootRate = 5f;
 
-        //difficulty setup
+        // difficulty setup
         alien_speed = 0.5f;
 
         // ui setup
@@ -215,20 +215,58 @@ class GameScreen implements Screen {
         }
 
         // difficulty enhancer
-        if (kills < 15) {
-            moveDelay = 0.8f;
+        if (level == 1) {
+            if (kills < 15) {
+                moveDelay = 0.7f;
+            }
+            if (kills >= 15) {
+                moveDelay = 0.6f;
+                shootRate = 4f;
+            }
+            if (kills >= 30) {
+                moveDelay = 0.5f;
+                shootRate = 3f;
+            }
+            if (kills >= 45) {
+                moveDelay = 0.4f;
+                shootRate = 2f;
+            }
         }
-        if (kills >= 15) {
-            moveDelay = 0.6f;
-            shootRate = 4f;
+        if (level == 2) {
+            if (kills < 15) {
+                moveDelay = 0.6f;
+                shootRate = 4f;
+            }
+            if (kills >= 15) {
+                moveDelay = 0.5f;
+                shootRate = 4f;
+            }
+            if (kills >= 25) {
+                moveDelay = 0.4f;
+                shootRate = 3f;
+            }
+            if (kills >= 35) {
+                moveDelay = 0.3f;
+                shootRate = 2f;
+            }
         }
-        if (kills >= 30) {
-            moveDelay = 0.4f;
-            shootRate = 3f;
-        }
-        if (kills >= 45) {
-            moveDelay = 0.2f;
-            shootRate = 2f;
+        if (level >= 3) {
+            if (kills < 15) {
+                moveDelay = 0.5f;
+                shootRate = 3f;
+            }
+            if (kills >= 15) {
+                moveDelay = 0.4f;
+                shootRate = 3f;
+            }
+            if (kills >= 25) {
+                moveDelay = 0.3f;
+                shootRate = 2f;
+            }
+            if (kills >= 35) {
+                moveDelay = 0.2f;
+                shootRate = 1f;
+            }
         }
 
         // play next level after killing all enemies in current level
