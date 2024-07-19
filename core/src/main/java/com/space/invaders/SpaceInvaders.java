@@ -251,7 +251,7 @@ class GameScreen implements Screen {
                 shootRate = 1f;
             }
         }
-        if (level >= 3) {
+        if (level == 3) {
             if (kills < 15) {
                 moveDelay = 0.3f;
                 shootRate = 2f;
@@ -267,6 +267,24 @@ class GameScreen implements Screen {
             if (kills >= 35) {
                 moveDelay = 0.2f;
                 shootRate = .5f;
+            }
+        }
+        if (level >= 4) {
+            if (kills < 15) {
+                moveDelay = 0.2f;
+                shootRate = .5f;
+            }
+            if (kills >= 15) {
+                moveDelay = 0.2f;
+                shootRate = .5f;
+            }
+            if (kills >= 25) {
+                moveDelay = 0.1f;
+                shootRate = .1f;
+            }
+            if (kills >= 35) {
+                moveDelay = 0.1f;
+                shootRate = .1f;
             }
         }
 
